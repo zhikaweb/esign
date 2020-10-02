@@ -1,7 +1,10 @@
 package org.eapo.service.esign.rest;
 
+import org.eapo.service.esign.model.Document;
+import org.eapo.service.esign.service.DocumentService;
 import org.eapo.service.esign.service.SignerPdfImpl;
 import org.eapo.service.esign.service.Word2PdfImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +18,9 @@ import java.io.IOException;
 @CrossOrigin
 @RestController
 public class UploadController {
+
+    @Autowired
+    DocumentService documentService;
 
     public static HttpHeaders getHeaders() {
         HttpHeaders header = addAccessControlAllowOrigin();
@@ -38,23 +44,29 @@ public class UploadController {
     }
 
     @PostMapping("/uploadFile")
-//    @RequestMapping(value="/uploadFile", produces = "application/json", method= RequestMethod.POST)
 public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
 
-       Word2PdfImpl word2Pdf = new Word2PdfImpl();
-       byte[] pdf =  word2Pdf.convert(file.getBytes());
-       byte[] signed =  new SignerPdfImpl().sign(pdf);
-       return getResponse(getHeaders("signed.pdf"), signed);
+       byte[] signed =  new SignerPdfImpl().sign(file.getBytes());
+
+        Document document = new Document("12345678", 1, signed);
+        documentService.save(document);
+        return getResponse(getHeaders(document.getId()+".pdf"), signed);
 }
+
+@GetMapping("/downloadFile")
+    public ResponseEntity<Resource> doenloadFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp")  Integer odcorresp) throws Exception {
+
+    Document document = documentService.get(Document.createId(idappli, odcorresp));
+    return getResponse(getHeaders(document.getId()+".pdf"), document.getBody());
+}
+
 
 
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public ResponseEntity<String> upload() throws IOException {
-
         return ResponseEntity.ok()
                 .headers(getHeaders())
                 .body("{\"ASDF\":1}");
-
     }
 
 
