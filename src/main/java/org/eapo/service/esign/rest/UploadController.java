@@ -1,5 +1,7 @@
 package org.eapo.service.esign.rest;
 
+import org.eapo.service.esign.service.SignerPdfImpl;
+import org.eapo.service.esign.service.Word2PdfImpl;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -37,30 +39,42 @@ public class UploadController {
 
     @PostMapping("/uploadFile")
 //    @RequestMapping(value="/uploadFile", produces = "application/json", method= RequestMethod.POST)
-public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-//    public ResponseEntity<String> uploadFile() throws IOException {
+public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
 
-
-        System.out.println("aaa");
-       System.out.println(file.getBytes().length);
-
-        return ResponseEntity.ok()
-                .headers(getHeaders())
-                .body("{\"ASDF\":1}");
+       Word2PdfImpl word2Pdf = new Word2PdfImpl();
+       byte[] pdf =  word2Pdf.convert(file.getBytes());
+       byte[] signed =  new SignerPdfImpl().sign(pdf);
+       return getResponse(getHeaders("signed.pdf"), signed);
 }
 
 
     @RequestMapping(value="/upload", method= RequestMethod.GET)
     public ResponseEntity<String> upload() throws IOException {
 
-
-        System.out.println("bbb");
-      //  System.out.println(file.getBytes().length);
-
         return ResponseEntity.ok()
                 .headers(getHeaders())
                 .body("{\"ASDF\":1}");
 
+    }
+
+
+    private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
+        ByteArrayResource resource = new ByteArrayResource(res);
+        return ResponseEntity.ok()
+                .headers(header)
+                .contentLength(res.length)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(resource);
+    }
+
+
+    public static HttpHeaders getHeaders(String filename) {
+        HttpHeaders header = addAccessControlAllowOrigin();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+        return header;
     }
 
 }

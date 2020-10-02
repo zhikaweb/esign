@@ -19,7 +19,8 @@ class StamperTest {
                .setCertNumber("342345456")
                .setCertOwner("Eurasian Patent Office")
                .setCertExpireTo("27-08-2020 / 27-08-2022")
-               .build();    Files.readAllBytes(new File(getClass().getClassLoader().getResource ("stamp.png").getFile()).toPath());
+               .build();
+       Files.readAllBytes(new File(getClass().getClassLoader().getResource ("stamp.png").getFile()).toPath());
 
 
       byte[] res =  new Stamper().doStamp(pdf, stamp);
