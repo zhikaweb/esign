@@ -35,4 +35,11 @@ public class DocumentServiceRedisImpl implements DocumentService {
     public Document get(String id) {
         return (Document) hashOperations.get(correspPool, id);
     }
+
+    @Override
+    public Long delete(String id) {
+        return  hashOperations.delete(correspPool, id);
+    }
+
+
 }

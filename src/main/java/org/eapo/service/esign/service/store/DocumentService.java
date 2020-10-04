@@ -9,4 +9,8 @@ public interface DocumentService {
     String save(Document document);
 
     Document get(String id);
+
+    Long delete(String id);
+
+
 }

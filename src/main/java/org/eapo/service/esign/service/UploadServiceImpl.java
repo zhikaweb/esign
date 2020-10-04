@@ -1,6 +1,7 @@
 package org.eapo.service.esign.service;
 
 
+import org.eapo.service.esign.exception.EsignException;
 import org.eapo.service.esign.model.Document;
 import org.eapo.service.esign.service.converter.Converter2PdfService;
 import org.eapo.service.esign.service.store.DocumentService;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 public class UploadServiceImpl implements UploadService{
@@ -29,16 +32,39 @@ public class UploadServiceImpl implements UploadService{
     Converter2PdfService converter2PdflService;
 
     @Override
-    public Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer) throws Exception {
+    public Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer)  {
 
-        logger.debug("Converting to pdf...");
-        byte[] pdf = converter2PdflService.convert(file.getBytes());
+        byte[] pdf = null;
 
-        logger.debug("Set stamp to file for signer {} ...", signer);
-        byte[] stamped = stamperService.doStamp(pdf,signer);
+        try {
+            logger.debug("Converting to pdf...");
+            pdf = converter2PdflService.convert(file.getBytes());
+        } catch (Exception e){
 
-        logger.debug("Adding e-signature...");
-        byte[] signed = signerPdfService.sign(stamped);
+            logger.error("error converting to pdf!");
+            throw  new EsignException("error converting to pdf!",e);
+        }
+
+        byte[] stamped = null;
+
+        try {
+            logger.debug("Set stamp to file for signer {} ...", signer);
+            stamped = stamperService.doStamp(pdf, signer);
+        } catch (Exception e){
+            logger.error("error setting user stamp!");
+            throw  new EsignException("error setting user stamp!",e);
+        }
+
+
+        byte[] signed = null;
+        try {
+            logger.debug("Adding e-signature...");
+            signed = signerPdfService.sign(stamped);
+
+        } catch (Exception e){
+            logger.error("error sign process!");
+            throw  new EsignException("error sign process!",e);
+        }
 
         logger.debug("Saving to document store...");
         Document document = new Document(idappli, odcorresp, signed);
@@ -51,7 +77,12 @@ public class UploadServiceImpl implements UploadService{
     }
 
     @Override
-    public Document downloadFile(String idappli, Integer odcorresp) throws Exception {
+    public Document downloadFile(String idappli, Integer odcorresp)  {
         return documentService.get(Document.createId(idappli, odcorresp));
+    }
+
+    @Override
+    public Long deleteFile(String idappli, Integer odcorresp) {
+        return documentService.delete(Document.createId(idappli, odcorresp));
     }
 }

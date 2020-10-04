@@ -33,7 +33,7 @@ public class UploadController {
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
     }
 
-    @GetMapping("/downloadFile")
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadFile", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity downloadFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
 
         logger.info("Downloading document by idappli = {}, odcorresp = {}", idappli, odcorresp);
@@ -41,7 +41,7 @@ public class UploadController {
 
         if (document==null){
             logger.warn("Document by idappli = {}, odcorresp = {} not found!", idappli, odcorresp);
-            return ResponseEntity.notFound().allow(HttpMethod.POST).build();
+            return ResponseEntity.notFound().allow(HttpMethod.GET).build();
         }
 
         String fileName = document.getId() + RESPONSE_FILE_EXT;
@@ -49,7 +49,20 @@ public class UploadController {
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteFile")
+    public ResponseEntity deleteFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
 
+        logger.info("Deleting document by idappli = {}, odcorresp = {}", idappli, odcorresp);
+        Long id = uploadService.deleteFile(idappli,odcorresp);
+
+        if (id==null){
+            logger.warn("Document by idappli = {}, odcorresp = {} not found!", idappli, odcorresp);
+            return ResponseEntity.notFound().allow(HttpMethod.DELETE).build();
+        }
+
+        logger.info("Document by idappli = {}, odcorresp = {} removed!");
+        return ResponseEntity.ok().allow(HttpMethod.DELETE).build();
+    }
 
 
     private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
