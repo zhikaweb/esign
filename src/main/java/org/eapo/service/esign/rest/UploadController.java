@@ -1,15 +1,14 @@
 package org.eapo.service.esign.rest;
 
 import org.eapo.service.esign.model.Document;
-import org.eapo.service.esign.service.DocumentService;
-import org.eapo.service.esign.service.SignerPdfService;
-import org.eapo.service.esign.service.StamperService;
+import org.eapo.service.esign.service.UploadService;
+import org.eapo.service.esign.util.HTTPUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,41 +16,40 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class UploadController {
 
-    @Autowired
-    DocumentService documentService;
+    private static Logger logger = LoggerFactory.getLogger(UploadController.class.getName());
+    private static final String RESPONSE_FILE_EXT = ".pdf";
 
     @Autowired
-    SignerPdfService signerPdfService;
-
-    @Autowired
-    StamperService stamperService;
+    UploadService uploadService;
 
 
-    private static HttpHeaders addAccessControlAllowOrigin() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, PUT, OPTIONS, DELETE");
-        return headers;
-    }
-
-   // @PostMapping("/uploadFile")
    @RequestMapping(method = RequestMethod.POST, value = "/uploadFile", produces = MediaType.APPLICATION_PDF_VALUE)
    public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp, String signer) throws Exception {
 
-        byte[] stamped = stamperService.doStamp(file.getBytes(),signer);
-
-        byte[] signed = signerPdfService.sign(stamped);
-
-        Document document = new Document(idappli, odcorresp, signed);
-        documentService.save(document);
-        return getResponse(getHeaders(document.getId() + ".pdf"), document.getBody());
+        logger.info("Uploading file idappli = {}, odcorresp = {}, signer = {}, file size = {}", idappli, odcorresp, signer, file.getBytes());
+        Document document = uploadService.uploadFile(file,idappli,odcorresp,signer);
+        String fileName = document.getId() + RESPONSE_FILE_EXT;
+        logger.debug("Sending response file {}", fileName);
+        return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
     }
 
     @GetMapping("/downloadFile")
-    public ResponseEntity<Resource> downloadFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
+    public ResponseEntity downloadFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
 
-        Document document = documentService.get(Document.createId(idappli, odcorresp));
-        return getResponse(getHeaders(document.getId() + ".pdf"), document.getBody());
+        logger.info("Downloading document by idappli = {}, odcorresp = {}", idappli, odcorresp);
+        Document document = uploadService.downloadFile(idappli,odcorresp);
+
+        if (document==null){
+            logger.warn("Document by idappli = {}, odcorresp = {} not found!", idappli, odcorresp);
+            return ResponseEntity.notFound().allow(HttpMethod.POST).build();
+        }
+
+        String fileName = document.getId() + RESPONSE_FILE_EXT;
+        logger.debug("Sending response file {}", fileName);
+        return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
     }
+
+
 
 
     private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
@@ -59,19 +57,12 @@ public class UploadController {
         return ResponseEntity.ok()
                 .headers(header)
                 .contentLength(res.length)
-                .contentType(MediaType.parseMediaType("application/pdf"))
+                .contentType(MediaType.parseMediaType(MediaType.APPLICATION_PDF_VALUE))
                 .body(resource);
     }
 
 
-    private static HttpHeaders getHeaders(String filename) {
-        HttpHeaders header = addAccessControlAllowOrigin();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        header.add("Pragma", "no-cache");
-        header.add("Expires", "0");
-        header.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
-        return header;
-    }
+
+
 
 }

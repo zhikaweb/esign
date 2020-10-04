@@ -1,4 +1,4 @@
-package org.eapo.service.esign.service;
+package org.eapo.service.esign.service.store;
 
 import org.eapo.service.esign.model.Document;
 

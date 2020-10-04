@@ -1,15 +1,17 @@
-package org.eapo.service.esign.service;
+package org.eapo.service.esign.service.converter;
 
 
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
+@Service
 public class Word2PdfImpl implements Word2Pdf {
 
     public byte[] convert(byte[] docx) throws IOException {

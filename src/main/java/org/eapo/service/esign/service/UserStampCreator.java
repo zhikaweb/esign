@@ -7,5 +7,5 @@ import java.io.IOException;
  */
 
 public interface UserStampCreator {
-    byte[] build(String user, String sertNumber) throws IOException;
+    byte[] build(String user, String sertNumber);
 }

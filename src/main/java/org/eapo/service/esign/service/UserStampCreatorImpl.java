@@ -1,5 +1,8 @@
 package org.eapo.service.esign.service;
 
+import org.eapo.service.esign.exception.EsignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ import java.io.IOException;
 @Service
 public class UserStampCreatorImpl implements UserStampCreator {
 
+    private static Logger logger = LoggerFactory.getLogger(UserStampCreatorImpl.class.getName());
+
+
     @Value("${esigner.userstamp.file}")
     private String userStampFile;
 
@@ -23,8 +29,14 @@ public class UserStampCreatorImpl implements UserStampCreator {
     private Integer userStampFontSize;
 
     @Override
-    public byte[] build(String user, String certNumber) throws IOException {
-        BufferedImage img = ImageIO.read(new File(getClass().getClassLoader().getResource(userStampFile).getFile()));
+    public byte[] build(String user, String certNumber) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(getClass().getClassLoader().getResource(userStampFile).getFile()));
+        } catch (IOException e) {
+           logger.error("Cant read stamp template {} : {}", userStampFile, e.getMessage());
+           throw new EsignException("Cant read stamp template ",e);
+        }
 
         Graphics2D gO = img.createGraphics();
         gO.setColor(Color.black);
@@ -35,8 +47,15 @@ public class UserStampCreatorImpl implements UserStampCreator {
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(img, "jpg", baos);
-        baos.flush();
+        try {
+            ImageIO.write(img, "jpg", baos);
+            baos.flush();
+            baos.close();
+        } catch (Exception e) {
+            logger.error("Cant create  stamp  : {}", e.getMessage());
+            throw new EsignException("Cant create stamp",e);
+        }
+
 
         return baos.toByteArray();
 

@@ -1,23 +1,29 @@
 package org.eapo.service.esign.service;
 
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
+import org.eapo.service.esign.exception.EsignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
 @Service
 public class SignerPdfServiceImpl implements SignerPdfService {
 
+    private static Logger logger = LoggerFactory.getLogger(SignerPdfServiceImpl.class.getName());
 
     @Autowired
     StampTextCreator stampText;
@@ -55,47 +61,88 @@ public class SignerPdfServiceImpl implements SignerPdfService {
     @Value("${esigner.stamp.rectangle.ury}")
     float stampUry;
 
+
+    @Value("${esigner.stamp.rotation}")
+    float stampRotation;
+
     @Value("${esigner.stamp.page}")
     Integer stampPage;
 
+    @Value("${esigner.crypto.hashalgorithm.short}")
+    private String hashAlgorithm;
+
+    @Value("${esigner.stamp.position.x}")
+    private float stampAbsX;
+    @Value("${esigner.stamp.position.y}")
+    private float stampAbsY;
+
     @Override
-    public byte[] sign(byte[] pdf) throws Exception {
+    public byte[] sign(byte[] pdf) {
 
-        FileInputStream inputStream = new FileInputStream(keystore);
+        X509Certificate x509 = null;
+        PrivateKey privateKey = null;
 
-        KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);
+        logger.debug("getting data from keystore...");
+        try {
+            FileInputStream inputStream = new FileInputStream(keystore);
+            KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);
+            keyStore.load(inputStream, keystorePassword.toCharArray());
+            java.security.cert.Certificate cert = keyStore.getCertificate(keystoreKeyName);
 
-        keyStore.load(inputStream, keystorePassword.toCharArray());
+             x509 = (X509Certificate) cert;
+             privateKey = (PrivateKey) keyStore.getKey(keystoreKeyName, keystorePassword.toCharArray());
 
-        java.security.cert.Certificate cert = keyStore.getCertificate(keystoreKeyName);
-        X509Certificate x509 = (X509Certificate) cert;
-        PrivateKey privateKey = (PrivateKey) keyStore.getKey(keystoreKeyName, keystorePassword.toCharArray());
 
-        PdfReader reader = new PdfReader(pdf);
+        } catch (FileNotFoundException e){
+            logger.error("Key store {} not found!", keystore);
+            throw new EsignException("Key store " + keystore + " not found!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            logger.error("NoSuchProvider {} ", cryptoprovider);
+            throw new EsignException("Provider " + cryptoprovider + " not found!");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new EsignException(e.getMessage());
+        }
+
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
-        PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
-        appearance.setCertificate(cert);
 
-        appearance.setLayer2Text(stampText.getCertText(x509));
+        logger.debug("Set stamp and sign...");
+
+      try {
+          PdfReader reader = new PdfReader(pdf);
+
+          PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
+          PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
+          appearance.setCertificate(x509);
+
+          logger.debug("set Text Layer at stamp...");
+          appearance.setLayer2Text(stampText.getCertText(x509));
+
+          logger.debug("setVisibleSignatureRotated...");
+          setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
+
+          ExternalSignature externalSignature = new PrivateKeySignature(privateKey, hashAlgorithm, null);
+          ExternalDigest externalDigest = new BouncyCastleDigest();
+
+          logger.debug("Making signature...");
+          MakeSignature.signDetached(appearance, externalDigest, externalSignature, new Certificate[]{x509}, null, null, null, 0, MakeSignature.CryptoStandard.CMS);
 
 
-        setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
+          os.flush();
+          os.close();
 
-        ExternalSignature externalSignature = new PrivateKeySignature(privateKey, "SHA-256", null);
-        ExternalDigest externalDigest = new BouncyCastleDigest();
-        MakeSignature.signDetached(appearance, externalDigest, externalSignature, new Certificate[]{cert}, null, null, null, 0, MakeSignature.CryptoStandard.CMS);
-
-
-        os.flush();
-        os.close();
-
-
+      } catch (Exception e){
+          logger.error(e.getMessage());
+          throw new EsignException(e.getMessage());
+      }
+        logger.debug("Stamp & sign process finished");
         return os.toByteArray();
     }
 
 
-    private static void setVisibleSignatureRotated(PdfStamper stamper, PdfSignatureAppearance appearance, Rectangle pageRect, int page, String fieldName) throws Exception {
+    private void setVisibleSignatureRotated(PdfStamper stamper, PdfSignatureAppearance appearance, Rectangle pageRect, int page, String fieldName) throws DocumentException, IOException {
         float height = pageRect.getHeight();
         float width = pageRect.getWidth();
         float llx = pageRect.getLeft();
@@ -121,8 +168,8 @@ public class SignerPdfServiceImpl implements SignerPdfService {
         Image textImg = Image.getInstance(t);
         textImg.setInterpolation(true);
         textImg.scaleAbsolute(height, width);
-        textImg.setRotationDegrees((float) 90);
-        textImg.setAbsolutePosition(0, 0);
+        textImg.setRotationDegrees(stampRotation);
+        textImg.setAbsolutePosition(stampAbsX, stampAbsY);
         n2Layer.addImage(textImg);
     }
 

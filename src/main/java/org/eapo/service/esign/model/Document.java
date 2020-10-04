@@ -2,12 +2,18 @@ package org.eapo.service.esign.model;
 
 import java.io.Serializable;
 
+/**
+ *  Объект для хранения документов в хранилище
+ *  Ключом для извлечения является idappli-odcorresp
+ */
+
+
 public class Document implements Serializable {
 
     private static final String ID_DELIMITER = "-";
     private String idappli;
     private Integer odcorresp;
-    private Integer version = 1;
+    private Integer version = 1; // пока не используем
 
 
     public static String createId(String idappli, Integer odcorresp) {

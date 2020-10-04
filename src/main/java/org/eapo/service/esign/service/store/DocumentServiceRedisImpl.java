@@ -1,7 +1,8 @@
-package org.eapo.service.esign.service;
+package org.eapo.service.esign.service.store;
 
 import org.eapo.service.esign.model.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,8 @@ import javax.annotation.PostConstruct;
 @Service
 public class DocumentServiceRedisImpl implements DocumentService {
 
-    static final String CORRESP_KEY = "CORRESP";
+    @Value("${esigner.redis.store.corresp.pool}")
+    private String correspPool;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -25,12 +27,12 @@ public class DocumentServiceRedisImpl implements DocumentService {
 
     @Override
     public String save(Document document) {
-        hashOperations.put(CORRESP_KEY, document.getId(), document);
+        hashOperations.put(correspPool, document.getId(), document);
         return document.getId();
     }
 
     @Override
     public Document get(String id) {
-        return (Document) hashOperations.get(CORRESP_KEY, id);
+        return (Document) hashOperations.get(correspPool, id);
     }
 }
