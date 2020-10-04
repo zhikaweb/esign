@@ -14,20 +14,16 @@ class Word2PdfImplTest {
     void convert() throws IOException {
 
 
-       // System.getProperty("java.library.path");
+        // System.getProperty("java.library.path");
 
 
-       // String filename = "C:\\Users\\AStal\\projects\\esign\\src\\main\\resources\\jacob.dll";
+        // String filename = "C:\\Users\\AStal\\projects\\esign\\src\\main\\resources\\jacob.dll";
         System.out.println(System.getProperty("java.library.path"));
 
-     //  new eapo.commons.word2pdf.Word2PDfConverter().convert(new File(getClass().getClassLoader().getResource ("word.doc").getFile()));
+        //  new eapo.commons.word2pdf.Word2PDfConverter().convert(new File(getClass().getClassLoader().getResource ("word.doc").getFile()));
 
 
-
-
-
-
-        byte[] word =  Files.readAllBytes(new File(getClass().getClassLoader().getResource ("word4.doc").getFile()).toPath());
+        byte[] word = Files.readAllBytes(new File(getClass().getClassLoader().getResource("word4.doc").getFile()).toPath());
 
         byte[] res = new Word2PdfImpl().convert(word);
         File file = new File("C:\\Users\\AStal\\res.pdf");

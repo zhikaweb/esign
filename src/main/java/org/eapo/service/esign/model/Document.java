@@ -10,8 +10,8 @@ public class Document implements Serializable {
     private Integer version = 1;
 
 
-    public static String createId(String idappli, Integer odcorresp){
-        return  idappli+ ID_DELIMITER +odcorresp;
+    public static String createId(String idappli, Integer odcorresp) {
+        return idappli + ID_DELIMITER + odcorresp;
     }
 
     public Document(String idappli, Integer odcorresp, byte[] body) {
@@ -50,6 +50,8 @@ public class Document implements Serializable {
         this.version = version;
     }
 
-    public String getId(){return createId(getIdappli(), getOdcorresp());}
+    public String getId() {
+        return createId(getIdappli(), getOdcorresp());
+    }
 
 }

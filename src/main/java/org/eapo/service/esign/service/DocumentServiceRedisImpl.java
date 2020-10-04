@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class DocumentServiceImpl implements DocumentService {
+public class DocumentServiceRedisImpl implements DocumentService {
 
-    public static final String CORRESP_KEY = "CORRESP";
+    static final String CORRESP_KEY = "CORRESP";
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -19,18 +19,18 @@ public class DocumentServiceImpl implements DocumentService {
     private HashOperations hashOperations;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
     public String save(Document document) {
-        hashOperations.put(CORRESP_KEY, document.hashCode(), document);
+        hashOperations.put(CORRESP_KEY, document.getId(), document);
         return document.getId();
     }
 
     @Override
     public Document get(String id) {
-        return (Document) hashOperations.get(CORRESP_KEY,id);
+        return (Document) hashOperations.get(CORRESP_KEY, id);
     }
 }

@@ -1,6 +1,10 @@
 package org.eapo.service.esign.service;
 
-public interface SignerPdf {
+/**
+ * Установка ЭЦП
+ **/
 
+
+public interface SignerPdfService {
     byte[] sign(byte[] pdf) throws Exception;
 }

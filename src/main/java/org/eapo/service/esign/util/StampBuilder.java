@@ -32,20 +32,19 @@ public class StampBuilder {
     }
 
     public byte[] build() throws IOException {
-        BufferedImage img = ImageIO.read(new File(getClass().getClassLoader().getResource (file).getFile()));
+        BufferedImage img = ImageIO.read(new File(getClass().getClassLoader().getResource(file).getFile()));
 
         Graphics2D gO = img.createGraphics();
         gO.setColor(Color.black);
-        gO.setFont(new Font( "SansSerif", Font.BOLD, 10 ));
+        gO.setFont(new Font("SansSerif", Font.BOLD, 10));
 
-        gO.drawString(this.certNumber, img.getWidth()/3,  (int) (img.getHeight()/1.55));
-        gO.drawString(this.certOwner, img.getWidth()/3,  (int) (img.getHeight()/1.3));
-        gO.drawString(this.certExpireTo, img.getWidth()/3,  (int) (img.getHeight()/1.13));
-
+        gO.drawString(this.certNumber, img.getWidth() / 3, (int) (img.getHeight() / 1.55));
+        gO.drawString(this.certOwner, img.getWidth() / 3, (int) (img.getHeight() / 1.3));
+        gO.drawString(this.certExpireTo, img.getWidth() / 3, (int) (img.getHeight() / 1.13));
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write( img, "jpg", baos );
+        ImageIO.write(img, "jpg", baos);
         baos.flush();
 
         return baos.toByteArray();

@@ -1,4 +1,4 @@
-package org.eapo.service.esign.util;
+package org.eapo.service.esign.service;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
@@ -6,16 +6,31 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Stamper {
+@Service
+public class StamperServiceImpl implements StamperService{
 
-    public byte[] doStamp(byte[] pdf, byte[] stamp) throws IOException, DocumentException {
+    @Value("${esigner.userstamp.position.height}")
+    float stampPositionHeight;
 
+    @Value("${esigner.userstamp.position.width}")
+    Integer stampPositionWidth;
+
+    @Autowired
+    UserStampCreator userStampCreator;
+
+    @Override
+    public byte[] doStamp(byte[] pdf, String user) throws IOException, DocumentException {
+
+        byte[] stamp = userStampCreator.build(user, "");
 
         InputStream pdfStream = new ByteArrayInputStream(pdf);
 
@@ -28,13 +43,11 @@ public class Stamper {
 
         PdfContentByte content = pdfStamper.getOverContent(pdfReader.getNumberOfPages());
         Image deliverImg = Image.getInstance(stamp);
-        //      deliverImg.setScaleToFitLineWhenOverflow(true);
-        //  deliverImg.setAbsolutePosition(300f, 10f);
-        //        deliverImg.setAbsolutePosition(0f, 0f);
+
         Rectangle r = pdfReader.getPageSize(pdfReader.getNumberOfPages());
 
-        float width = r.getWidth() - deliverImg.getWidth();
-        float height = 0f;
+        float width = stampPositionWidth + r.getWidth() - deliverImg.getWidth();
+        float height = stampPositionHeight;
 
 
         deliverImg.setAbsolutePosition(width, height);
@@ -44,6 +57,6 @@ public class Stamper {
 
         return baos.toByteArray();
 
-    }
 
+    }
 }

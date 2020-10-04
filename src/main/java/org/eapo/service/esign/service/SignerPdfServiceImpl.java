@@ -4,45 +4,83 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.Date;
 
-public class SignerPdfImpl implements SignerPdf {
+@Service
+public class SignerPdfServiceImpl implements SignerPdfService {
+
+
+    @Autowired
+    StampTextCreator stampText;
+
+    @Value("${esigner.crypto.keystore}")
+    private String keystore;
+
+    @Value("${esigner.crypto.certstore}")
+    private String certstore;
+
+    @Value("${esigner.crypto.keystore.password}")
+    private String keystorePassword;
+
+    @Value("${esigner.crypto.keystore.keyname}")
+    String keystoreKeyName;
+
+    @Value("${esigner.crypto.certholdername}")
+    private String certHolderName;
+
+    @Value("${esigner.crypto.cryptoprovider}")
+    private String cryptoprovider;
+
+    @Value("${esigner.crypto.privatekey.format}")
+    private String privateKeyFormat;
+
+    @Value("${esigner.stamp.rectangle.llx}")
+    float stampLlx;
+
+    @Value("${esigner.stamp.rectangle.lly}")
+    float stampLly;
+
+    @Value("${esigner.stamp.rectangle.urx}")
+    float stampUrx;
+
+    @Value("${esigner.stamp.rectangle.ury}")
+    float stampUry;
+
+    @Value("${esigner.stamp.page}")
+    Integer stampPage;
+
     @Override
-    public byte[] sign(byte[] pdf) throws Exception  {
+    public byte[] sign(byte[] pdf) throws Exception {
 
-        FileInputStream inputStream = new FileInputStream("C:\\testcert\\eapo.cert");
+        FileInputStream inputStream = new FileInputStream(keystore);
 
-        KeyStore keyStore = KeyStore.getInstance("PKCS12","BC");
+        KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);
 
-        keyStore.load(inputStream,"password".toCharArray());
+        keyStore.load(inputStream, keystorePassword.toCharArray());
 
-        java.security.cert.Certificate cert = keyStore.getCertificate("key");
+        java.security.cert.Certificate cert = keyStore.getCertificate(keystoreKeyName);
         X509Certificate x509 = (X509Certificate) cert;
-        PrivateKey privateKey = (PrivateKey)keyStore.getKey("key","password".toCharArray());
+        PrivateKey privateKey = (PrivateKey) keyStore.getKey(keystoreKeyName, keystorePassword.toCharArray());
 
         PdfReader reader = new PdfReader(pdf);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
         PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
-        appearance.setCertificate( cert);
+        appearance.setCertificate(cert);
 
-        appearance.setLayer2Text("Signed by " + x509.getIssuerDN() + "at " + new Date()
-                + "\n Certificate "   + x509.getSerialNumber()
-                + "\n Valid to " + x509.getNotAfter() );
+        appearance.setLayer2Text(stampText.getCertText(x509));
 
 
-        setVisibleSignatureRotated(stamper, appearance, new Rectangle(0, 50, 50, 1000), 1, null);
-
-
+        setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
 
         ExternalSignature externalSignature = new PrivateKeySignature(privateKey, "SHA-256", null);
         ExternalDigest externalDigest = new BouncyCastleDigest();

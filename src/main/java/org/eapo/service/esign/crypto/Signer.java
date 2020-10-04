@@ -7,55 +7,51 @@ import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.signatures.*;
 */
+
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 public class Signer {
 
     public static void main(String[] args) throws Exception {
 
-        CertificateBuilder.addBouncyCastleAsSecurityProvider();
+        //  CertificateBuilder.addBouncyCastleAsSecurityProvider();
         new Signer().sign();
     }
 
-    private void sign() throws Exception  {
+    private void sign() throws Exception {
 
         FileInputStream inputStream = new FileInputStream("C:\\testcert\\eapo.cert");
 
-        KeyStore keyStore = KeyStore.getInstance("PKCS12","BC");
+        KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
 
-        keyStore.load(inputStream,"password".toCharArray());
+        keyStore.load(inputStream, "password".toCharArray());
 
         java.security.cert.Certificate cert = keyStore.getCertificate("key");
         X509Certificate x509 = (X509Certificate) cert;
-        PrivateKey privateKey = (PrivateKey)keyStore.getKey("key","password".toCharArray());
+        PrivateKey privateKey = (PrivateKey) keyStore.getKey("key", "password".toCharArray());
 
         PdfReader reader = new PdfReader("C:\\testcert\\res.pdf");
         FileOutputStream os = new FileOutputStream("C:\\testcert\\signed.pdf");
         PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
         PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
-        appearance.setCertificate( cert);
+        appearance.setCertificate(cert);
 
         appearance.setLayer2Text("Signed by " + x509.getIssuerDN()
-                        + "\n Certificate "   + x509.getSerialNumber()
-                        + "\n Valid to " + x509.getNotAfter() );
+                + "\n Certificate " + x509.getSerialNumber()
+                + "\n Valid to " + x509.getNotAfter());
 
 
         setVisibleSignatureRotated(stamper, appearance, new Rectangle(0, 50, 50, 1000), 1, null);
-
 
 
         ExternalSignature externalSignature = new PrivateKeySignature(privateKey, "SHA-256", null);
