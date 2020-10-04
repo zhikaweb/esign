@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin
-@RestController
+@RestController()
+@RequestMapping("/document")
 public class UploadController {
 
     private static Logger logger = LoggerFactory.getLogger(UploadController.class.getName());
@@ -23,7 +24,7 @@ public class UploadController {
     UploadService uploadService;
 
 
-   @RequestMapping(method = RequestMethod.POST, value = "/uploadFile", produces = MediaType.APPLICATION_PDF_VALUE)
+   @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
    public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp, String signer) throws Exception {
 
         logger.info("Uploading file idappli = {}, odcorresp = {}, signer = {}, file size = {}", idappli, odcorresp, signer, file.getBytes());
@@ -33,7 +34,7 @@ public class UploadController {
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/downloadFile", produces = MediaType.APPLICATION_PDF_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity downloadFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
 
         logger.info("Downloading document by idappli = {}, odcorresp = {}", idappli, odcorresp);
@@ -49,7 +50,7 @@ public class UploadController {
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteFile")
+    @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity deleteFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
 
         logger.info("Deleting document by idappli = {}, odcorresp = {}", idappli, odcorresp);

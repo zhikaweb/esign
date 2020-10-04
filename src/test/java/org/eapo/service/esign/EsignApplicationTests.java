@@ -1,5 +1,6 @@
 package org.eapo.service.esign;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 
 import static java.util.Arrays.asList;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class EsignApplicationTests {

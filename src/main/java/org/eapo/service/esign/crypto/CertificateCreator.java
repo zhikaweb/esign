@@ -45,6 +45,7 @@ public class CertificateCreator {
     String keystorePassword;
 
     @Value("${esigner.crypto.keystore.keyname}")
+    private
     String keystoreKeyName;
 
     @Value("${esigner.crypto.certholdername}")
@@ -72,6 +73,7 @@ public class CertificateCreator {
     Integer certPeriod;
 
     @Value("${esigner.crypto.keygenerator.keysize}")
+    private
     Integer keySize;
 
 

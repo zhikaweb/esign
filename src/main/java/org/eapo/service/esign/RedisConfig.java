@@ -20,9 +20,16 @@ public class RedisConfig {
     @Value("${esigner.redis.port}")
     Integer redisPort;
 
+    @Value("${esigner.redis.password:null}")
+    String redisPassword;
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
+
+        if (redisPassword!=null) {
+            redisStandaloneConfiguration.setPassword(redisPassword);
+        }
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
