@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.math.BigInteger;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -27,9 +28,9 @@ import java.util.Date;
 
 
 @Service
-public class CertificateCreator {
+public class RootCertificateCreator {
 
-    private static Logger logger = LoggerFactory.getLogger(CertificateCreator.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RootCertificateCreator.class.getName());
 
 
     @Value("${esigner.crypto.keystore}")
@@ -77,6 +78,7 @@ public class CertificateCreator {
     Integer keySize;
 
 
+
     public X509Certificate generateSelfSignedX509Certificate() throws Exception {
 
         logger.info("Start generateSelfSignedX509Certificate");
@@ -89,23 +91,13 @@ public class CertificateCreator {
         logger.debug("Certificate for {} creation by hashAlgorithm {} period {} days", certHolderName, hashAlgorithm, certPeriod);
         X509Certificate cert = generate(keyPair, hashAlgorithm, certHolderName, certPeriod);
 
-        KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);
 
-        keyStore.load(null, null);
 
-        keyStore.setKeyEntry(keystoreKeyName, keyPair.getPrivate(), null, new java.security.cert.Certificate[]{cert});
+        String keyStorePath = Paths.get(keystore).resolve(KeyStoreHelper.CA.concat(KeyStoreHelper.KEYSTORE_EXT)).toString();
+        String certStorePath = Paths.get(keystore).resolve(KeyStoreHelper.CA.concat(KeyStoreHelper.CERT_EXT)).toString();
 
-        logger.debug("Save key to keystore {}", keystore);
-        FileOutputStream keyStoewFOS = new FileOutputStream(keystore);
-        keyStore.store(keyStoewFOS, keystorePassword.toCharArray());
-        keyStoewFOS.flush();
-        keyStoewFOS.close();
-
-        logger.debug("Save cert to certstore {}", certstore);
-        FileOutputStream certFOS = new FileOutputStream(certstore);
-        certFOS.write(cert.getEncoded());
-        certFOS.flush();
-        certFOS.close();
+        KeyStoreHelper.store(privateKeyFormat, cryptoprovider,keyStorePath, keystoreKeyName, keystorePassword, keyPair.getPrivate(), cert);
+        KeyStoreHelper.store(cert, certStorePath);
 
 
         logger.debug("New certificate was created!");

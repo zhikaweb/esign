@@ -2,7 +2,7 @@ package org.eapo.service.esign;
 
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.eapo.service.esign.crypto.CertificateCreator;
+import org.eapo.service.esign.crypto.RootCertificateCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -34,7 +34,7 @@ private static Logger logger = LoggerFactory.getLogger(EsignApplication.class.ge
 
         if ("true".equalsIgnoreCase(context.getEnvironment().getProperty("esign.recreatekeys"))) {
             logger.warn("Recreation certificate!");
-            context.getBean(CertificateCreator.class).generateSelfSignedX509Certificate();
+            context.getBean(RootCertificateCreator.class).generateSelfSignedX509Certificate();
         }
     }
 

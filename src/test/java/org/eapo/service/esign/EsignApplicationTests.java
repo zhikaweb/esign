@@ -18,11 +18,9 @@ import static java.util.Arrays.asList;
 
 @Ignore
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class EsignApplicationTests {
 
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
