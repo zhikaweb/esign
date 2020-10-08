@@ -6,5 +6,5 @@ package org.eapo.service.esign.service;
 
 
 public interface SignerPdfService {
-    byte[] sign(byte[] pdf) throws Exception;
+    byte[] sign(byte[] pdf, String certHolder) throws Exception;
 }

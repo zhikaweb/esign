@@ -5,6 +5,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
+import org.eapo.service.esign.crypto.KeyStoreHelper;
 import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,13 @@ public class SignerPdfServiceImpl implements SignerPdfService {
     @Autowired
     StampTextCreator stampText;
 
+
+    @Autowired
+    KeyStoreHelper keyStoreHelper;
+
     @Value("${esigner.crypto.keystore}")
     private String keystore;
 
-    @Value("${esigner.crypto.certstore}")
-    private String certstore;
 
     @Value("${esigner.crypto.keystore.password}")
     private String keystorePassword;
@@ -77,18 +80,17 @@ public class SignerPdfServiceImpl implements SignerPdfService {
     private float stampAbsY;
 
     @Override
-    public byte[] sign(byte[] pdf) {
+    public byte[] sign(byte[] pdf, String certHolder) {
 
         X509Certificate x509 = null;
         PrivateKey privateKey = null;
 
         logger.debug("getting data from keystore...");
         try {
-            FileInputStream inputStream = new FileInputStream(keystore);
-            KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);
-            keyStore.load(inputStream, keystorePassword.toCharArray());
-            java.security.cert.Certificate cert = keyStore.getCertificate(keystoreKeyName);
+          //  FileInputStream inputStream = new FileInputStream(keystore);
+            KeyStore keyStore = keyStoreHelper.load(certHolder);
 
+             java.security.cert.Certificate cert = keyStore.getCertificate(keystoreKeyName);
              x509 = (X509Certificate) cert;
              privateKey = (PrivateKey) keyStore.getKey(keystoreKeyName, keystorePassword.toCharArray());
 

@@ -16,6 +16,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -56,35 +57,26 @@ public class UserCertificateCreator {
     @Value("${esigner.crypto.keystore.password}")
     private String rootPassword;
 
-    @Value("${esigner.crypto.keystore.keyname}")
-    private String rootKey;
 
-
-    @Value("${esigner.crypto.keystore}")
-    private String keystore;
-
-
-    @Value("${esigner.crypto.keystore.password}")
-    private String keystorePassword;
-
-
-    @Value("${esigner.crypto.privatekey.format}")
-    private String privateKeyFormat;
 
     @Value("${esigner.crypto.cert.period}")
     private
     Integer certPeriod;
 
+    @Autowired
+    KeyStoreHelper keyStoreHelper;
 
-    public X509Certificate create(String user, String userLogName) throws OperatorCreationException, NoSuchProviderException, NoSuchAlgorithmException, IOException, CertificateException, KeyStoreException, UnrecoverableKeyException {
+    public X509Certificate create(String user, String certHolder) throws OperatorCreationException, NoSuchProviderException, NoSuchAlgorithmException, IOException, CertificateException, KeyStoreException, UnrecoverableKeyException {
 
 
         logger.info("Creating certificate for {}", user);
 
         logger.debug("Reading CA cert from store");
-        KeyStore rootStore = KeyStoreHelper.load(keystore, privateKeyFormat, cryptoprovider,keystorePassword);
 
-        java.security.cert.Certificate cert = rootStore.getCertificate(rootKey);
+
+        KeyStore rootStore = keyStoreHelper.load(KeyStoreHelper.CA);
+
+        java.security.cert.Certificate cert = rootStore.getCertificate(KeyStoreHelper.CA);
         X509Certificate rootx509Cert = (X509Certificate) cert;
 
         logger.debug("Generating key pair");
@@ -92,7 +84,7 @@ public class UserCertificateCreator {
         keyPairGenerator.initialize(keySize, new SecureRandom());
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
-        PrivateKey rootPrivateKey = (PrivateKey) rootStore.getKey(rootKey, rootPassword.toCharArray());
+        PrivateKey rootPrivateKey = (PrivateKey) rootStore.getKey(KeyStoreHelper.CA, rootPassword.toCharArray());
 
         logger.debug("Generating certificate request");
         String principal = "CN=".concat(user);
@@ -135,9 +127,8 @@ public class UserCertificateCreator {
         X509CertificateHolder issuedCertHolder = issuedCertBuilder.build(csrContentSigner);
         X509Certificate issuerCert =  new JcaX509CertificateConverter().setProvider(cryptoprovider).getCertificate(issuedCertHolder);
 
-        String keyStorePath = Paths.get(keystore).resolve(userLogName.concat(KeyStoreHelper.KEYSTORE_EXT)).toString();
 
-        KeyStoreHelper.store(privateKeyFormat, cryptoprovider,keyStorePath, userLogName, keystorePassword, keyPair.getPrivate(), issuerCert);
+        keyStoreHelper.store(certHolder,  keyPair.getPrivate(), issuerCert);
 
 
         return issuerCert;

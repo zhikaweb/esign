@@ -32,7 +32,7 @@ public class UploadServiceImpl implements UploadService{
     Converter2PdfService converter2PdflService;
 
     @Override
-    public Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer)  {
+    public Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer, String certHolder)  {
 
         byte[] pdf = null;
 
@@ -49,7 +49,7 @@ public class UploadServiceImpl implements UploadService{
 
         try {
             logger.debug("Set stamp to file for signer {} ...", signer);
-            stamped = stamperService.doStamp(pdf, signer);
+            stamped = stamperService.doStamp(pdf, certHolder);
         } catch (Exception e){
             logger.error("error setting user stamp!");
             throw  new EsignException("error setting user stamp!",e);
@@ -59,7 +59,7 @@ public class UploadServiceImpl implements UploadService{
         byte[] signed = null;
         try {
             logger.debug("Adding e-signature...");
-            signed = signerPdfService.sign(stamped);
+            signed = signerPdfService.sign(stamped, certHolder);
 
         } catch (Exception e){
             logger.error("error sign process!");

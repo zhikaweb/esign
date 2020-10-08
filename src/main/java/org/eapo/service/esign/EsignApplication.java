@@ -39,7 +39,7 @@ private static Logger logger = LoggerFactory.getLogger(EsignApplication.class.ge
     }
 
 
-    private static void addBouncyCastleAsSecurityProvider() {
+    public static void addBouncyCastleAsSecurityProvider() {
         logger.debug("Adding BouncyCastleAsSecurityProvider");
         Security.addProvider(new BouncyCastleProvider());
         logger.debug("BouncyCastle is ready!");

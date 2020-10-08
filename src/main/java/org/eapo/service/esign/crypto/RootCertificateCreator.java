@@ -11,6 +11,7 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,23 +33,6 @@ public class RootCertificateCreator {
 
     private static Logger logger = LoggerFactory.getLogger(RootCertificateCreator.class.getName());
 
-
-    @Value("${esigner.crypto.keystore}")
-    private
-    String keystore;
-
-    @Value("${esigner.crypto.certstore}")
-    private
-    String certstore;
-
-    @Value("${esigner.crypto.keystore.password}")
-    private
-    String keystorePassword;
-
-    @Value("${esigner.crypto.keystore.keyname}")
-    private
-    String keystoreKeyName;
-
     @Value("${esigner.crypto.certholdername}")
     private
     String certHolderName;
@@ -65,9 +49,6 @@ public class RootCertificateCreator {
     @Value("${esigner.crypto.hashalgorithm}")
     private String hashAlgorithm;
 
-    @Value("${esigner.crypto.privatekey.format}")
-    private
-    String privateKeyFormat;
 
     @Value("${esigner.crypto.cert.period}")
     private
@@ -77,7 +58,8 @@ public class RootCertificateCreator {
     private
     Integer keySize;
 
-
+    @Autowired
+    KeyStoreHelper keyStoreHelper;
 
     public X509Certificate generateSelfSignedX509Certificate() throws Exception {
 
@@ -92,13 +74,8 @@ public class RootCertificateCreator {
         X509Certificate cert = generate(keyPair, hashAlgorithm, certHolderName, certPeriod);
 
 
-
-        String keyStorePath = Paths.get(keystore).resolve(KeyStoreHelper.CA.concat(KeyStoreHelper.KEYSTORE_EXT)).toString();
-        String certStorePath = Paths.get(keystore).resolve(KeyStoreHelper.CA.concat(KeyStoreHelper.CERT_EXT)).toString();
-
-        KeyStoreHelper.store(privateKeyFormat, cryptoprovider,keyStorePath, keystoreKeyName, keystorePassword, keyPair.getPrivate(), cert);
-        KeyStoreHelper.store(cert, certStorePath);
-
+        keyStoreHelper.store(KeyStoreHelper.CA, keyPair.getPrivate(), cert);
+        keyStoreHelper.store(KeyStoreHelper.CA, cert);
 
         logger.debug("New certificate was created!");
         return cert;
