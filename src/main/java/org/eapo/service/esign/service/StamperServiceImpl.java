@@ -69,18 +69,23 @@ public class StamperServiceImpl implements StamperService{
 
             PdfStamper pdfStamper = new PdfStamper(pdfReader, baos);
 
-            PdfContentByte content = pdfStamper.getOverContent(pdfReader.getNumberOfPages());
+         //   PdfContentByte content = pdfStamper.getOverContent(pdfReader.getNumberOfPages());
             Image deliverImg = Image.getInstance(stamp);
 
-            Rectangle r = pdfReader.getPageSize(pdfReader.getNumberOfPages());
+          //  Rectangle r = pdfReader.getPageSize(pdfReader.getNumberOfPages());
 
-            float width = stampPositionWidth + r.getWidth() - deliverImg.getWidth();
+            float width = stampPositionWidth;// + r.getWidth() - deliverImg.getWidth();
             float height = stampPositionHeight;
 
             deliverImg.setAbsolutePosition(width, height);
 
-            logger.debug("Adding stamp image to pdf...");
-            content.addImage(deliverImg);
+            logger.debug("Adding stamp image...");
+            PdfContentByte content;
+           for (int page = 1; page<=pdfReader.getNumberOfPages(); page++){
+               logger.debug("Stamp at page {} ", page);
+               content = pdfStamper.getOverContent(page);
+               content.addImage(deliverImg);
+           }
 
             pdfStamper.close();
         } catch (Exception e) {
@@ -93,4 +98,6 @@ public class StamperServiceImpl implements StamperService{
 
 
     }
+
+
 }

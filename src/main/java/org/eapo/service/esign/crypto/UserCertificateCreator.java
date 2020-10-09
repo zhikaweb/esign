@@ -95,7 +95,7 @@ public class UserCertificateCreator {
         PKCS10CertificationRequest csr = p10Builder.build(signer);
 
 
-        X500Name x500Name = new X500Name("CN=" + rootx509Cert.getIssuerX500Principal().getName());
+        X500Name x500Name = new X500Name("CN=" + user);
 
         final Instant now = Instant.now();
         final Date notBefore = Date.from(now);

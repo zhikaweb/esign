@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 
 @Service
 public class UserStampCreatorImpl implements UserStampCreator {
@@ -30,11 +31,18 @@ public class UserStampCreatorImpl implements UserStampCreator {
     @Value("${esigner.userstamp.font.size}")
     private Integer userStampFontSize;
 
+    @Value("${esigner.userstamp.dateformat:dd.MM.yyyy}")
+    private String dateFormat;
+
     @Override
     public byte[] build(X509Certificate certificate) {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(userStampFile));
+          //  img =  ImageIO.read(new File(getClass().getClassLoader().getResource(userStampFile).getFile()));
         } catch (IOException e) {
            logger.error("Cant read stamp template {} : {}", userStampFile, e.getMessage());
            throw new EsignException("Cant read stamp template ",e);
@@ -49,6 +57,12 @@ public class UserStampCreatorImpl implements UserStampCreator {
                 (int) (img.getHeight() / 1.55));
         gO.drawString(certificate.getIssuerX500Principal().getName(),
                 img.getWidth() / 3, (int) (img.getHeight() / 1.3));
+
+
+        String validPeriod = dateFormatter.format(certificate.getNotBefore()) + "  -  " + dateFormatter.format(certificate.getNotAfter());
+
+        gO.drawString(validPeriod,
+                img.getWidth() / 3, (int) (img.getHeight() / 1.1));
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -90,9 +90,9 @@ public class SignerPdfServiceImpl implements SignerPdfService {
           //  FileInputStream inputStream = new FileInputStream(keystore);
             KeyStore keyStore = keyStoreHelper.load(certHolder);
 
-             java.security.cert.Certificate cert = keyStore.getCertificate(keystoreKeyName);
+             java.security.cert.Certificate cert = keyStore.getCertificate(certHolder);
              x509 = (X509Certificate) cert;
-             privateKey = (PrivateKey) keyStore.getKey(keystoreKeyName, keystorePassword.toCharArray());
+             privateKey = (PrivateKey) keyStore.getKey(certHolder, keystorePassword.toCharArray());
 
 
         } catch (FileNotFoundException e){
@@ -123,7 +123,7 @@ public class SignerPdfServiceImpl implements SignerPdfService {
           appearance.setLayer2Text(stampText.getCertText(x509));
 
           logger.debug("setVisibleSignatureRotated...");
-          setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
+        //  setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
 
           ExternalSignature externalSignature = new PrivateKeySignature(privateKey, hashAlgorithm, null);
           ExternalDigest externalDigest = new BouncyCastleDigest();

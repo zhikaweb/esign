@@ -3,6 +3,7 @@ package org.eapo.service.esign.service.store;
 import org.eapo.service.esign.model.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
+@Profile("redis")
 public class DocumentServiceRedisImpl implements DocumentService {
 
     @Value("${esigner.redis.store.corresp.pool}")
