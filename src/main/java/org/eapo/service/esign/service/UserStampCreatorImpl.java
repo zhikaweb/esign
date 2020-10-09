@@ -32,7 +32,7 @@ public class UserStampCreatorImpl implements UserStampCreator {
     public byte[] build(String user, String certNumber) {
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File(getClass().getClassLoader().getResource(userStampFile).getFile()));
+            img = ImageIO.read(new File(userStampFile));
         } catch (IOException e) {
            logger.error("Cant read stamp template {} : {}", userStampFile, e.getMessage());
            throw new EsignException("Cant read stamp template ",e);

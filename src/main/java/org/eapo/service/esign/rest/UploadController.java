@@ -67,7 +67,7 @@ public class UploadController {
 
 
     private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
-        ByteArrayResource resource = new ByteArrayResource(res);
+        Resource resource = new ByteArrayResource(res);
         return ResponseEntity.ok()
                 .headers(header)
                 .contentLength(res.length)

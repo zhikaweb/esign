@@ -41,6 +41,7 @@ private static Logger logger = LoggerFactory.getLogger(EsignApplication.class.ge
 
     private static void addBouncyCastleAsSecurityProvider() {
         logger.debug("Adding BouncyCastleAsSecurityProvider");
+        Security.setProperty("crypto.policy", "unlimited");
         Security.addProvider(new BouncyCastleProvider());
         logger.debug("BouncyCastle is ready!");
     }
