@@ -11,11 +11,13 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.math.BigInteger;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -27,26 +29,9 @@ import java.util.Date;
 
 
 @Service
-public class CertificateCreator {
+public class RootCertificateCreator {
 
-    private static Logger logger = LoggerFactory.getLogger(CertificateCreator.class.getName());
-
-
-    @Value("${esigner.crypto.keystore}")
-    private
-    String keystore;
-
-    @Value("${esigner.crypto.certstore}")
-    private
-    String certstore;
-
-    @Value("${esigner.crypto.keystore.password}")
-    private
-    String keystorePassword;
-
-    @Value("${esigner.crypto.keystore.keyname}")
-    private
-    String keystoreKeyName;
+    private static Logger logger = LoggerFactory.getLogger(RootCertificateCreator.class.getName());
 
     @Value("${esigner.crypto.certholdername}")
     private
@@ -64,9 +49,6 @@ public class CertificateCreator {
     @Value("${esigner.crypto.hashalgorithm}")
     private String hashAlgorithm;
 
-    @Value("${esigner.crypto.privatekey.format}")
-    private
-    String privateKeyFormat;
 
     @Value("${esigner.crypto.cert.period}")
     private
@@ -76,6 +58,8 @@ public class CertificateCreator {
     private
     Integer keySize;
 
+    @Autowired
+    KeyStoreHelper keyStoreHelper;
 
     public X509Certificate generateSelfSignedX509Certificate() throws Exception {
 
@@ -89,24 +73,9 @@ public class CertificateCreator {
         logger.debug("Certificate for {} creation by hashAlgorithm {} period {} days", certHolderName, hashAlgorithm, certPeriod);
         X509Certificate cert = generate(keyPair, hashAlgorithm, certHolderName, certPeriod);
 
-        KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);
 
-        keyStore.load(null, null);
-
-        keyStore.setKeyEntry(keystoreKeyName, keyPair.getPrivate(), null, new java.security.cert.Certificate[]{cert});
-
-        logger.debug("Save key to keystore {}", keystore);
-        FileOutputStream keyStoewFOS = new FileOutputStream(keystore);
-        keyStore.store(keyStoewFOS, keystorePassword.toCharArray());
-        keyStoewFOS.flush();
-        keyStoewFOS.close();
-
-        logger.debug("Save cert to certstore {}", certstore);
-        FileOutputStream certFOS = new FileOutputStream(certstore);
-        certFOS.write(cert.getEncoded());
-        certFOS.flush();
-        certFOS.close();
-
+        keyStoreHelper.store(KeyStoreHelper.CA, keyPair.getPrivate(), cert);
+        keyStoreHelper.store(KeyStoreHelper.CA, cert);
 
         logger.debug("New certificate was created!");
         return cert;

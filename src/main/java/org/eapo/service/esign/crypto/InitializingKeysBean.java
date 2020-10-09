@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 public class InitializingKeysBean implements InitializingBean {
 
     @Autowired
-    private CertificateCreator certificateCreator;
+    private RootCertificateCreator rootCertificateCreator;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        certificateCreator.generateSelfSignedX509Certificate();
+        rootCertificateCreator.generateSelfSignedX509Certificate();
     }
 }

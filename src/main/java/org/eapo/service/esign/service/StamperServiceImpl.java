@@ -6,6 +6,7 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+import org.eapo.service.esign.crypto.KeyStoreHelper;
 import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 @Service
 public class StamperServiceImpl implements StamperService{
@@ -33,12 +40,25 @@ public class StamperServiceImpl implements StamperService{
     @Autowired
     UserStampCreator userStampCreator;
 
+    @Autowired
+    KeyStoreHelper keyStoreHelper;
+
     @Override
-    public byte[] doStamp(byte[] pdf, String user) {
+    public byte[] doStamp(byte[] pdf, String certHolder) {
 
-        logger.debug("Making stamp for user {}", user);
+        logger.debug("Making stamp for user {}", certHolder);
 
-        byte[] stamp = userStampCreator.build(user, "");
+        X509Certificate cert  = null;
+        try {
+            KeyStore keyStore  = keyStoreHelper.load(certHolder);
+            cert = (X509Certificate) keyStore.getCertificate(certHolder);
+        } catch (Exception e) {
+            logger.error("Cant read keystore {}", e.getMessage());
+            throw new EsignException("Cant read keystore",e);
+        }
+
+
+        byte[] stamp = userStampCreator.build(cert);
 
 
         InputStream pdfStream = new ByteArrayInputStream(pdf);

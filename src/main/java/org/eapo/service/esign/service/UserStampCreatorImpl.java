@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 
 @Service
 public class UserStampCreatorImpl implements UserStampCreator {
@@ -29,7 +31,7 @@ public class UserStampCreatorImpl implements UserStampCreator {
     private Integer userStampFontSize;
 
     @Override
-    public byte[] build(String user, String certNumber) {
+    public byte[] build(X509Certificate certificate) {
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(userStampFile));
@@ -42,8 +44,11 @@ public class UserStampCreatorImpl implements UserStampCreator {
         gO.setColor(Color.black);
         gO.setFont(new Font(userStampFont, Font.BOLD, userStampFontSize));
 
-        gO.drawString(certNumber, img.getWidth() / 3, (int) (img.getHeight() / 1.55));
-        gO.drawString(user, img.getWidth() / 3, (int) (img.getHeight() / 1.3));
+        gO.drawString(certificate.getSerialNumber().toString(),
+                img.getWidth() / 3,
+                (int) (img.getHeight() / 1.55));
+        gO.drawString(certificate.getIssuerX500Principal().getName(),
+                img.getWidth() / 3, (int) (img.getHeight() / 1.3));
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

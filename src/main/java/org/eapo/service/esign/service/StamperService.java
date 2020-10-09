@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public interface StamperService {
 
-    byte[] doStamp(byte[] pdf, String user) throws IOException, DocumentException;
+    byte[] doStamp(byte[] pdf, String certHolder) throws IOException, DocumentException;
 
 }

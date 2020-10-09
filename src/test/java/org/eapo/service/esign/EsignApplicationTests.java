@@ -27,7 +27,7 @@ public class EsignApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-/*
+
     @Test
     public void contextLoader() {
         String fileName = "test.txt";
