@@ -7,7 +7,7 @@ import java.io.IOException;
 
 
 public interface UploadService {
-    Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer, String certHolder);
+    Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer, String certHolder, String saveToStore);
     Document downloadFile(String idappli, Integer odcorresp) throws Exception;
     Long deleteFile(String idappli, Integer odcorresp);
 }

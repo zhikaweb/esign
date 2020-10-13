@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -95,7 +96,26 @@ public class SignerPdfServiceImpl implements SignerPdfService {
              privateKey = (PrivateKey) keyStore.getKey(certHolder, keystorePassword.toCharArray());
 
 
-        } catch (FileNotFoundException e){
+        } catch (NoSuchFileException e){
+
+            try {
+
+                logger.warn("Сертификат пользователя {} не обнаружен. Берем корневик!", certHolder);
+
+                KeyStore keyStore = keyStoreHelper.load(KeyStoreHelper.CA);
+
+                java.security.cert.Certificate cert = keyStore.getCertificate(KeyStoreHelper.CA);
+                x509 = (X509Certificate) cert;
+                privateKey = (PrivateKey) keyStore.getKey(KeyStoreHelper.CA, keystorePassword.toCharArray());
+
+            } catch (Exception ex){
+
+                throw new EsignException("Error on load ROOT Cert! " + ex.getMessage());
+            }
+
+        }
+
+        catch (FileNotFoundException e){
             logger.error("Key store {} not found!", keystore);
             throw new EsignException("Key store " + keystore + " not found!");
         } catch (IOException e) {

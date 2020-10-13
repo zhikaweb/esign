@@ -25,10 +25,15 @@ public class UploadController {
 
 
    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
-   public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp, String signer, String certHolder) throws Exception {
+   public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("idappli") String idappli,
+                                              @RequestParam("odcorresp") Integer odcorresp,
+                                              @RequestParam("signer") String signer,
+                                              @RequestParam("certHolder") String certHolder,
+                                              @RequestParam(value = "save", defaultValue = "true") String saveToStore) throws Exception {
 
         logger.info("Uploading file idappli = {}, odcorresp = {}, signer = {}, file size = {}", idappli, odcorresp, signer, file.getBytes());
-        Document document = uploadService.uploadFile(file,idappli,odcorresp,signer, certHolder);
+        Document document = uploadService.uploadFile(file,idappli,odcorresp,signer, certHolder, saveToStore);
         String fileName = document.getId() + RESPONSE_FILE_EXT;
         logger.debug("Sending response file {}", fileName);
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());

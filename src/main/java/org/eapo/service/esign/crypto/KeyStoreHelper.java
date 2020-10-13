@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -42,6 +44,11 @@ public class KeyStoreHelper {
     public KeyStore load(String certHolder) throws IOException, NoSuchProviderException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
 
         String keystorePath = getKeyPath(certHolder);
+
+        if (!Paths.get(keystorePath).toFile().exists()){
+            throw new NoSuchFileException("Нет ключа для пользователя " + certHolder);
+        }
+
         logger.debug("load key from keystore {}", keystorePath);
         FileInputStream inputStream = new FileInputStream(keystorePath);
         KeyStore keyStore = KeyStore.getInstance(privateKeyFormat, cryptoprovider);

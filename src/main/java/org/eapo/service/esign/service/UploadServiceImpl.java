@@ -32,9 +32,9 @@ public class UploadServiceImpl implements UploadService{
     Converter2PdfService converter2PdflService;
 
     @Override
-    public Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer, String certHolder)  {
+    public Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer, String certHolder, String saveToStore)  {
 
-        byte[] pdf = null;
+        byte[] pdf;
 
         try {
             logger.debug("Converting to pdf...");
@@ -45,7 +45,7 @@ public class UploadServiceImpl implements UploadService{
             throw  new EsignException("error converting to pdf!",e);
         }
 
-        byte[] stamped = null;
+        byte[] stamped;
 
         try {
             logger.debug("Set stamp to file for signer {} ...", signer);
@@ -56,7 +56,7 @@ public class UploadServiceImpl implements UploadService{
         }
 
 
-        byte[] signed = null;
+        byte[] signed;
         try {
             logger.debug("Adding e-signature...");
             signed = signerPdfService.sign(stamped, certHolder);
@@ -66,14 +66,17 @@ public class UploadServiceImpl implements UploadService{
             throw  new EsignException("error sign process!",e);
         }
 
-        logger.debug("Saving to document store...");
         Document document = new Document(idappli, odcorresp, signed);
-        documentService.save(document);
+
+        if(Boolean.TRUE.toString().equalsIgnoreCase(saveToStore)) {
+            logger.debug("Saving to document store...");
+            documentService.save(document);
+        } else {
+            logger.info("Skip saving document to store...");
+        }
 
         logger.debug("Sign & save process finished");
         return document;
-
-
     }
 
     @Override

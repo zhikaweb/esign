@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.NoSuchFileException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -52,7 +53,19 @@ public class StamperServiceImpl implements StamperService{
         try {
             KeyStore keyStore  = keyStoreHelper.load(certHolder);
             cert = (X509Certificate) keyStore.getCertificate(certHolder);
-        } catch (Exception e) {
+        } catch (NoSuchFileException e) {
+
+            try {
+                logger.warn("Сертификат пользователя {} не обнаружен. Берем корневик!", certHolder);
+                KeyStore keyStore = keyStoreHelper.load(KeyStoreHelper.CA);
+                cert = (X509Certificate) keyStore.getCertificate(KeyStoreHelper.CA);
+            } catch (Exception ex){
+                logger.error("Ошибка чтения корневика! {}", ex.getMessage());
+
+            }
+
+        }
+        catch (Exception e) {
             logger.error("Cant read keystore {}", e.getMessage());
             throw new EsignException("Cant read keystore",e);
         }
