@@ -3,6 +3,7 @@ package org.eapo.service.esign.service;
 
 import org.eapo.service.esign.EsignApplication;
 import org.eapo.service.esign.crypto.KeyStoreHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class StampCreatorTest {
     private String rootPassword;
 
 
+    @Ignore
     @Test
     public void test() throws NoSuchAlgorithmException, CertificateException, NoSuchProviderException, KeyStoreException, IOException {
 

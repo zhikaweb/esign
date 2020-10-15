@@ -3,6 +3,7 @@ package org.eapo.service.esign.service;
 import com.lowagie.text.DocumentException;
 import org.eapo.service.esign.EsignApplication;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class StampTest {
     StamperService stamperService;
 
 
+    @Ignore
     @Test
     public void test() throws IOException, DocumentException {
 
