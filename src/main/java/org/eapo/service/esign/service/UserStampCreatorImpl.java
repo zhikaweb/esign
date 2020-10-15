@@ -1,5 +1,8 @@
 package org.eapo.service.esign.service;
 
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,19 +56,32 @@ public class UserStampCreatorImpl implements UserStampCreator {
         gO.setFont(new Font(userStampFont, Font.BOLD, userStampFontSize));
 
         gO.drawString(certificate.getSerialNumber().toString(),
-                img.getWidth() / 3,
-                (int) (img.getHeight() / 1.55));
+                (int) (img.getWidth() / 2.7),
+                (int) (img.getHeight() / 1.6));
         gO.drawString(certificate.getIssuerX500Principal().getName(),
-                img.getWidth() / 3, (int) (img.getHeight() / 1.3));
+                (int) (img.getWidth() / 2.7), (int) (img.getHeight() / 1.3));
 
 
         String validPeriod = dateFormatter.format(certificate.getNotBefore()) + "  -  " + dateFormatter.format(certificate.getNotAfter());
 
         gO.drawString(validPeriod,
-                img.getWidth() / 3, (int) (img.getHeight() / 1.1));
+                (int) (img.getWidth() / 2.7), (int) (img.getHeight() / 1.1));
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
+        JPEGEncodeParam jpegParams = encoder.getDefaultJPEGEncodeParam(img);
+        jpegParams.setQuality(1.0f, false); // Set quality to 100% for JPEG
+        encoder.setJPEGEncodeParam(jpegParams);
+        try {
+            encoder.encode(img); // Encode image to JPEG
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+       /*
         try {
             ImageIO.write(img, "jpg", baos);
             baos.flush();
@@ -74,7 +90,7 @@ public class UserStampCreatorImpl implements UserStampCreator {
             logger.error("Cant create  stamp  : {}", e.getMessage());
             throw new EsignException("Cant create stamp",e);
         }
-
+*/
 
         return baos.toByteArray();
 
