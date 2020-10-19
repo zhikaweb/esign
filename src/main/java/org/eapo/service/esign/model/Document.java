@@ -26,6 +26,13 @@ public class Document implements Serializable {
         this.body = body;
     }
 
+    public Document(String id, byte[] body) {
+        String[] split = id.split(ID_DELIMITER);
+        this.idappli = split[0];
+        this.odcorresp = Integer.parseInt(split[1]);
+        this.body = body;
+    }
+
     public byte[] getBody() {
         return body;
     }
