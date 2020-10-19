@@ -1,9 +1,11 @@
 package org.eapo.service.esign.service;
-
+/*
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+*/
 import org.eapo.service.esign.exception.EsignException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,14 +64,14 @@ public class UserStampCreatorImpl implements UserStampCreator {
                 (int) (img.getWidth() / 2.7), (int) (img.getHeight() / 1.3));
 
 
-        String validPeriod = dateFormatter.format(certificate.getNotBefore()) + "  -  " + dateFormatter.format(certificate.getNotAfter());
+        String validPeriod = dateFormatter.format(certificate.getNotBefore()) + "-" + dateFormatter.format(certificate.getNotAfter());
 
         gO.drawString(validPeriod,
                 (int) (img.getWidth() / 2.7), (int) (img.getHeight() / 1.1));
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+/*
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
         JPEGEncodeParam jpegParams = encoder.getDefaultJPEGEncodeParam(img);
         jpegParams.setQuality(1.0f, false); // Set quality to 100% for JPEG
@@ -79,9 +81,9 @@ public class UserStampCreatorImpl implements UserStampCreator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+*/
 
 
-       /*
         try {
             ImageIO.write(img, "jpg", baos);
             baos.flush();
@@ -90,7 +92,7 @@ public class UserStampCreatorImpl implements UserStampCreator {
             logger.error("Cant create  stamp  : {}", e.getMessage());
             throw new EsignException("Cant create stamp",e);
         }
-*/
+
 
         return baos.toByteArray();
 

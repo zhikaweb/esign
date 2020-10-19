@@ -1,0 +1,219 @@
+root	Администратор
+seminov	Эминов С.А.
+akondrat	Кондрат А.В.
+itakhirov	Тахиров И.И.
+vasya	Сахибов Ш.Т.(--)
+rogoz	Начальник отдела ФЭ
+ashingarev	Шингарев A.A.
+agrig	Григорьев А.Н.(--)
+vika	Аксенова В.Ю.
+Fayazov	Фаязов Х.Ф.
+nurlan	Баяман Нурлан(--)
+eremenko	Еременко В.И. (--)
+kireeva	Киреева С.И.
+iva	Иванова Н.С.(--)
+tania	Степанова Т.А.(--)
+katya	Чекун Е.А.
+senchikh	Сенчихин А.В.(--)
+musupov	Юсупов М.Н.
+nnazarova	Назарова Н.А. (--)
+SZueva	Зуева С.Ю.
+pvalerei	Поздняков В.Г.(--)
+nbebirli	РЕЕСТР
+mpanteleev	Пантелеев М.В.(--)
+erofeeva	Ерофеева С.Б.(--)
+okvasenkova	Квасенкова О.Г.(--)
+mserova	Серова М.А.(--)
+vtaliansky	Талянский В.Б.(--)
+rstashkov	Сташков Р.Е.
+anahit	Шахкулян А.Р.(--)
+pdzegelenok	Дзегеленок П.И.
+aporh	Порхунов А.В.(--)
+maznev	Мазнев С.Ф.(--)
+kachanov	Качанов Ю.В.(--)
+ypechenin	Печенин Я.М.
+emesropova	Месропова Е.А.
+rmarina	Ракитянская М.В.(--)
+sirotyuk	Сиротюк В.О.(--)
+biteleva	Бителёва А.В.(--)
+pisman	Письман Л.Н.
+shabanov	Шабанов Р.Б.(--)
+fkireeva	Киреева Ф.А.(--)
+akuncho	Кунчо А.И.(--)
+david	Мириджанян Д.Р.(--)
+nabanina	Абанина Н.Б.
+lbarsova	Барсова Л.К. (--)
+torin	Торин А.П.(--)
+osvetlov	Светлов О.Ю.
+akomarov	Комаров А.М.(--)
+vtrubachev	Трубачев В.П.
+nignateva	Игнатьева Н.И.
+lena	Талакуева Е.Н.(--)
+hodi	Мусоев Х.Д.(--)
+rsalman	Сальман Р.А. (--)
+ksargazakov	Саргазаков К.Д.
+idavtyan	Давтян И.Ш.
+spalanchuk	Паланчук С.В.
+inikita	Никита И.И.
+epuchkova	Пучкова Е.В.
+redlab1	Шербель М.Р.(--)
+redlab2	Гущин С.И.(--)
+dkrylov	Крылов Д.Ф.
+mignatov	Игнатов М.Е. (--)
+rom	Архивариус
+vsurikov	Суриков В.И. (--)
+ozhivichina	Живичина О.Д.
+oksana	Смулькевич О.А.(--)
+kudashov	Кудашов С.В.
+aburtcev	Бурцев А.Б.
+abashkirtsev	Башкирцев А.К.
+DRogozhin	Рогожин Д.Ю.
+bibdate	Информация по заявкам
+withadm	Отозванные заявки
+mpd	MPD(--)
+emy	EMY(--)
+ее	Администратор для Иваныча
+jmb	JMB(--)
+cbj	CBJ(--)
+vl	VL(--)
+phj	PHJ(--)
+anna	Кароннова А.В.(--)
+nklimova	Малыхина Н.В.
+lshelkunova	Терентьева Л.В.
+lzakharova	Захарова Л.В.
+esolobaeva	Солобаева Э.А.
+lubat	Шарипова Л.Л.(--)
+saule	Жусупбекова С.А. (--)
+alf	Бородина А.М.(--)
+apashkov	Пашков А.Н.
+dzastavny	Заставный Д.В
+tkurkina	Куркина Т.И.(--)
+aceban	Чебан А.В.
+eapraksina	Апраксина Е.И.
+ydiakonov	Дьяконов Ю.Н.(--)
+srudnitskaya	Рудницкая С.С.
+ntagaeva	Тагаева Н.У.
+amarukyan	Марукян А.И.
+rbordeianu	Бордеяну Р.Г. (--)
+alytkin	Лыткин А.В.(--)
+tgussakovskaya	Гуссаковская Т.В.
+zhidova	Жидова Н.А.(--)
+lsviderskaya	Свидерская Л.В.
+ganna	Григорян А.А. (--)
+isakeeva	Исакеева Т.В.(--)
+aplopa	Плопа А.С. (--)
+dnatalia	Дмитриева Н.Г. (--)
+smigal	Мигаль С.С.
+smardoyan	Мардоян С.П.
+ikrom2	Тахиров - 2 (Нач.отд.фэ)
+gdjunushalieva	Джунушалиева Г.А.
+nmertehina	Мертехина Н.А.
+osafronova	Сафронова О.Б.
+efursenko	Фурсенко Э.К.
+sbakeeva	Бакеева С.К. (--)
+nachmfe	Начальник отдела механики, физики и электротехники
+vmalay	Малай В.И.
+akuttubaeva	Куттубаева А.А.
+okalmykova	Калмыкова О.Ю.
+njeyranyan	Джейранян Н.А.
+astal	Сталь А.Н. (649)
+evolkova	Волкова Е.В.
+agulpa	Гулпа А.А.
+mzykay	Зыкай М.Х.(--)
+damankulov	Аманкулов Д.Д.(--)
+atimonin	Тимонин А.Н.
+salyabyev	Алябьев С.Б. (--)
+eturkel	Туркель Е.В.
+oelesina	Иванова О.Н.
+sparfenova	Парфенова С.А. (--)
+oglushenkova	Глущенкова О.В
+physics	Отдел механики, физики и электротехники
+chemis	Отдел химии и медицины
+es	Отдел экспертизы по существу не определен
+jaltukhova	Алтухова Ю.В.
+basevich	Басевич Е.В.
+sragimov	Рагимов С.Д.
+apiatoshin	Пятошин А.Ю.
+chem	Начальник отдела химии и медицины
+okk	Начальник отдела по рассмотрению возражений
+nziatdinov	Зиатдинов Н.В.
+dvetrov	Ветров Д.М.
+atokoev	Токоев А.Т.
+asmirnov	Смирнов А.А.
+habirova	Хабирова Е.Б.
+autkina	Уткина А.А.
+otimofeeva	Тимофеева О.А.
+lmitiushencova	Митюшенкова Л.В.
+nposelkina	Поселкина Н.В.
+dbychkov	Бычков Д.В.
+agolubev	Голубев А.В.
+asafronov	Сафронов А.И.
+afridrikh	Фридрих А.А.
+epolevanova	Полеванова Е.А.
+achakarov	Чакаров А.Н.
+secretov	Секретов А.Ю.
+mesropov	Начальник редакционно-издательской группы
+jtolybaev	Толыбаев Ж.М. (--)
+tlomova	Ломова Т.И. (--)
+elubyako	Лубяко Е.Н.
+VOplachk	Оплачко В.
+jkuznetsova	Кузнецова Ж.Г.
+etyurin	Тюрин Е.Г.
+bibdate12	Биб.данные
+ekondakova	Кондакова Е.В.(--)
+sefimov	Ефимов C.Н.
+jamelkin	Амелькин Ю.В.
+msmirnov	Смирнов М.Б.
+vpanko	Панько В.Ю.
+ovlasova	Власова О.А.(--)
+snurusheva	Нурушева С.С.
+dmasherov	Машеров Д.Е.(--)
+rikonnikova	Иконникова Р.В.
+eegorov	Егоров Е.В.
+agutman	Гутман А.В.
+lvoronetsky	Воронецкий Л.И.(--)
+ykhoruk	Хорук Ю.В.
+smaruga	Маруга С.В.
+kdorokhina	Дорохина К.В.
+agolushko	Голушко А.И.
+rrrrykov	Рыков П.В. (--)
+oshmeleva	Шмелева Е.Л.
+Appeal	Я-Appeal (Работа с возражениями)
+eekimova	Екимова Е.В. (--)
+shabdreyeva	Абдреева Ш.Т.(--)
+vbabichenko	Бабиченко В.А.
+vkulikov	Куликов В.Е.
+ABelosludtseva	Белослудцева А.В.
+ASenatorov	Сенаторов А.В.
+ipavlova	Павлова И.Б
+jomarova	Омарова Ж.С.
+amarkelova	Маркелова А.В.
+msalakhetdinova	Салахетдинова М.Ю.
+asomov	Сомов А.С.
+snazirov	Назиров С.С.
+ofedonova	Федонова О.А.
+emahankova	Маханькова Е.Н.
+abarkovskiy	Барковский А.А. (--)
+dgudilin	Гудилин Д.А.
+ekomar	Комар Е.С.
+aorlov	Орлов А.В.
+eivanova	Иванова Е.И.
+abaydak	Байдак А.А.
+emammadov	Маммадов Э.Ф.
+pcurchem1	Куратор отдела химии и медицины 1
+pcurchem2	Куратор отдела химии и медицины 2
+nasylbekova	Асылбекова Н.А.
+ealenicheva	Аленичева Е.В.
+pcurchem3	Куратор отдела химии и медицины 3
+pcurchem4	Куратор отдела химии и медицины 4 
+ibubenkova	Бубенкова И.В.
+tlebedeva	Лебедева Т.А.
+leronina	Еронина Л.Е.
+egirinskaya	Гиринская Е.И.
+okrupko	Крупко О.В.
+ismirnova	Смирнова И.И.
+oivanova	Иванова О.Г.
+ilebedeva	Лебедева И.А.
+drubaylo	Рубайло Д.П.
+oshobanova	Шобанова О.А.
+valdanazarova	Алданазарова В.

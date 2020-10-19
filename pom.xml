@@ -148,6 +148,54 @@
 
 
 
+		<!-- Для аплоада в Мадрас -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ru.dmerkushov</groupId>
+			<artifactId>db-helper</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.27</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eapo.phoenix</groupId>
+			<artifactId>phx-helper</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ephoenix</groupId>
+			<artifactId>jsf-core</artifactId>
+			<version>1.22.5</version>
+		</dependency>
+		<dependency>
+			<groupId>ephoenix</groupId>
+			<artifactId>eporeuse</artifactId>
+			<version>2.39.7</version>
+		</dependency>
+		<dependency>
+			<groupId>ephoenix</groupId>
+			<artifactId>servicesCommon</artifactId>
+			<version>3.2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>ephoenix</groupId>
+			<artifactId>OnlineImportService-cl</artifactId>
+			<version>2.1.23</version>
+		</dependency>
+
+
 
 	</dependencies>
 
