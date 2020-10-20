@@ -30,7 +30,7 @@ public class PhoenixController {
     DocumentService documentService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Resource> upload(@RequestParam("dosier") String dosier,
+    public ResponseEntity upload(@RequestParam("dosier") String dosier,
                                            @RequestParam("idappli") String idappli,
                                            @RequestParam("odcorresp") Integer odcorresp,
                                            @RequestParam(value = "dtsend", defaultValue = "") String dtsend,
@@ -55,6 +55,8 @@ public class PhoenixController {
         } catch (Exception e) {
             logger.error("Error on saving document with idappli {} and odcorresp {} to phoenix : {}", idappli, odcorresp, e.getMessage());
             e.printStackTrace();
+
+            return ResponseEntity.status(500).body(e.getMessage());//.build();
         }
 
 
