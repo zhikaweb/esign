@@ -29,7 +29,7 @@ public class RedisConfig {
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
 
-        if (redisPassword!=null) {
+        if (redisPassword != null) {
             redisStandaloneConfiguration.setPassword(redisPassword);
         }
         return new JedisConnectionFactory(redisStandaloneConfiguration);

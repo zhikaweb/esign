@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -56,7 +55,6 @@ public class UserCertificateCreator {
 
     @Value("${esigner.crypto.keystore.password}")
     private String rootPassword;
-
 
 
     @Value("${esigner.crypto.cert.period}")
@@ -125,15 +123,14 @@ public class UserCertificateCreator {
 
         logger.debug("Generating certificate");
         X509CertificateHolder issuedCertHolder = issuedCertBuilder.build(csrContentSigner);
-        X509Certificate issuerCert =  new JcaX509CertificateConverter().setProvider(cryptoprovider).getCertificate(issuedCertHolder);
+        X509Certificate issuerCert = new JcaX509CertificateConverter().setProvider(cryptoprovider).getCertificate(issuedCertHolder);
 
 
-        keyStoreHelper.store(certHolder,  keyPair.getPrivate(), issuerCert);
+        keyStoreHelper.store(certHolder, keyPair.getPrivate(), issuerCert);
 
 
         return issuerCert;
     }
-
 
 
 }

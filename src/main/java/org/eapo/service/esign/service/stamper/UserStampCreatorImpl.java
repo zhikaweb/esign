@@ -1,18 +1,12 @@
-package org.eapo.service.esign.service;
-/*
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-*/
-import org.eapo.service.esign.exception.EsignException;
+package org.eapo.service.esign.service.stamper;
 
+import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -47,10 +41,10 @@ public class UserStampCreatorImpl implements UserStampCreator {
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(userStampFile));
-          //  img =  ImageIO.read(new File(getClass().getClassLoader().getResource(userStampFile).getFile()));
+            //  img =  ImageIO.read(new File(getClass().getClassLoader().getResource(userStampFile).getFile()));
         } catch (IOException e) {
-           logger.error("Cant read stamp template {} : {}", userStampFile, e.getMessage());
-           throw new EsignException("Cant read stamp template ",e);
+            logger.error("Cant read stamp template {} : {}", userStampFile, e.getMessage());
+            throw new EsignException("Cant read stamp template ", e);
         }
 
         Graphics2D gO = img.createGraphics();
@@ -71,18 +65,6 @@ public class UserStampCreatorImpl implements UserStampCreator {
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-/*
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
-        JPEGEncodeParam jpegParams = encoder.getDefaultJPEGEncodeParam(img);
-        jpegParams.setQuality(1.0f, false); // Set quality to 100% for JPEG
-        encoder.setJPEGEncodeParam(jpegParams);
-        try {
-            encoder.encode(img); // Encode image to JPEG
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-
 
         try {
             ImageIO.write(img, "jpg", baos);
@@ -90,7 +72,7 @@ public class UserStampCreatorImpl implements UserStampCreator {
             baos.close();
         } catch (Exception e) {
             logger.error("Cant create  stamp  : {}", e.getMessage());
-            throw new EsignException("Cant create stamp",e);
+            throw new EsignException("Cant create stamp", e);
         }
 
 

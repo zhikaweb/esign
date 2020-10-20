@@ -7,5 +7,5 @@ import java.io.IOException;
 @Service
 public interface Word2Pdf {
 
-    byte[] convert(byte[] file)throws IOException;
+    byte[] convert(byte[] file) throws IOException;
 }

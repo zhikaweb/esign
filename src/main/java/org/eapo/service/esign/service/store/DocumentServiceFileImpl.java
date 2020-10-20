@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,14 +30,14 @@ public class DocumentServiceFileImpl implements DocumentService {
             fileOutputStream.close();
             return document.getId();
         } catch (Exception e) {
-         e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }
 
     @Override
     public Document get(String id) {
-        Path path = Paths.get(fileStorePath, id+".pdf");
+        Path path = Paths.get(fileStorePath, id + ".pdf");
 
         byte[] body;
         try {
@@ -54,7 +52,7 @@ public class DocumentServiceFileImpl implements DocumentService {
 
     @Override
     public Long delete(String id) {
-        Path path = Paths.get(fileStorePath, id+".pdf");
-        return path.toFile().delete()? 1L : 0L;
+        Path path = Paths.get(fileStorePath, id + ".pdf");
+        return path.toFile().delete() ? 1L : 0L;
     }
 }

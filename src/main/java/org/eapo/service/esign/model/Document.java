@@ -3,8 +3,8 @@ package org.eapo.service.esign.model;
 import java.io.Serializable;
 
 /**
- *  Объект для хранения документов в хранилище
- *  Ключом для извлечения является idappli-odcorresp
+ * Объект для хранения документов в хранилище
+ * Ключом для извлечения является idappli-odcorresp
  */
 
 

@@ -5,13 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 
 @Service
-public class PhoenixServiceStub  implements PhoenixService{
+public class PhoenixServiceStub implements PhoenixService {
 
     private static Logger logger = LoggerFactory.getLogger(PhoenixServiceStub.class.getName());
 
@@ -22,13 +21,13 @@ public class PhoenixServiceStub  implements PhoenixService{
 
         DocLoadManager docLoadManager = new DocLoadManager();
 
-        short type=212;
+        short type = 212;
         String annotation = "";
         EPODate aDate = new EPODate();
 
-       // String docSource = "C:\\desc_amnd.pdf";
+        // String docSource = "C:\\desc_amnd.pdf";
 
-        File f = Files.createTempFile(dossier+"_"+ System.currentTimeMillis(),".pdf").toFile();
+        File f = Files.createTempFile(dossier + "_" + System.currentTimeMillis(), ".pdf").toFile();
 
         logger.info("tmp file {}", f.getAbsolutePath());
 
@@ -37,7 +36,7 @@ public class PhoenixServiceStub  implements PhoenixService{
         fileOutputStream.close();
 
 
-        String procedure="";
+        String procedure = "";
         boolean isSendMsg = false;
         String sendMsgToUser = "";
         String sendMsgToTeam = "";

@@ -19,7 +19,7 @@ public class HTTPUtil {
 
     public static HttpHeaders getCommonHeaders() {
         HttpHeaders headers = new HttpHeaders();
-     //   headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        //   headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         return headers;
     }
 }

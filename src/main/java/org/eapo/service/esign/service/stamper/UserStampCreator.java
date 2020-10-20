@@ -1,6 +1,5 @@
-package org.eapo.service.esign.service;
+package org.eapo.service.esign.service.stamper;
 
-import java.io.IOException;
 import java.security.cert.X509Certificate;
 
 /**

@@ -2,8 +2,6 @@ package org.eapo.service.esign.service.store;
 
 import org.eapo.service.esign.model.Document;
 
-import java.io.FileNotFoundException;
-
 /**
  * Сохранение и получение документа из хранилища
  */

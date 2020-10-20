@@ -3,6 +3,7 @@ package org.eapo.service.esign.service;
 
 import org.eapo.service.esign.EsignApplication;
 import org.eapo.service.esign.crypto.KeyStoreHelper;
+import org.eapo.service.esign.service.stamper.UserStampCreator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -41,18 +41,18 @@ public class StampCreatorTest {
 
         EsignApplication.addBouncyCastleAsSecurityProvider();
 
-       X509Certificate certificate = (X509Certificate) keyStoreHelper.load("astal").getCertificate("astal");
+        X509Certificate certificate = (X509Certificate) keyStoreHelper.load("astal").getCertificate("astal");
 
-       byte[] bytes = userStampCreator.build(certificate);
+        byte[] bytes = userStampCreator.build(certificate);
 
         try (FileOutputStream fos = new FileOutputStream("C:\\TEMP\\doc-signer\\img.png")) {
             fos.write(bytes);
-            //fos.close(); There is no more need for this line since you had created the instance of "fos" inside the try. And this will automatically close the OutputStream
         }
 
 
-    };
+    }
 
+    ;
 
 
 }

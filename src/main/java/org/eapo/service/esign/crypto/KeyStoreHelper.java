@@ -2,13 +2,14 @@ package org.eapo.service.esign.crypto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -24,7 +25,6 @@ public class KeyStoreHelper {
 
     private static final String KEYSTORE_EXT = ".pkcs";
     private static final String CERT_EXT = ".cert";
-
 
 
     @Value("${esigner.crypto.cryptoprovider}")
@@ -45,7 +45,7 @@ public class KeyStoreHelper {
 
         String keystorePath = getKeyPath(certHolder);
 
-        if (!Paths.get(keystorePath).toFile().exists()){
+        if (!Paths.get(keystorePath).toFile().exists()) {
             throw new NoSuchFileException("Нет ключа для пользователя " + certHolder);
         }
 
@@ -57,7 +57,7 @@ public class KeyStoreHelper {
     }
 
 
-    public void store(String certHolder,  PrivateKey key, Certificate cert) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+    public void store(String certHolder, PrivateKey key, Certificate cert) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
 
         String pathToStore = getKeyPath(certHolder);
         logger.debug("Save key to keystore {}", pathToStore);
@@ -67,9 +67,10 @@ public class KeyStoreHelper {
         keyStore.setKeyEntry(certHolder, key, null, new java.security.cert.Certificate[]{cert});
 
         File file = new File(pathToStore);
-        if (!file.createNewFile()){
+        if (!file.createNewFile()) {
             logger.error("Ошибка создания файла ");
-        };
+        }
+        ;
 
         FileOutputStream keyStoewFOS = new FileOutputStream(file);
         keyStore.store(keyStoewFOS, keystorePassword.toCharArray());
@@ -84,9 +85,10 @@ public class KeyStoreHelper {
         logger.debug("Save cert to certstore {}", pathToStore);
 
         File file = new File(pathToStore);
-        if (!file.createNewFile()){
+        if (!file.createNewFile()) {
             logger.error("Ошибка создания файла ");
-        };
+        }
+        ;
 
         FileOutputStream certFOS = new FileOutputStream(file);
         certFOS.write(cert.getEncoded());
@@ -94,11 +96,11 @@ public class KeyStoreHelper {
         certFOS.close();
     }
 
-    private String getKeyPath(String certHolder){
+    private String getKeyPath(String certHolder) {
         return Paths.get(keystore).resolve(certHolder.concat(KeyStoreHelper.KEYSTORE_EXT)).toString();
     }
 
-    private String getCertPath(String certHolder){
+    private String getCertPath(String certHolder) {
         return Paths.get(keystore).resolve(certHolder.concat(KeyStoreHelper.CERT_EXT)).toString();
     }
 

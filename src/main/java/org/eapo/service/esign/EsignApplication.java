@@ -2,10 +2,6 @@ package org.eapo.service.esign;
 
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.eapo.service.esign.crypto.RootCertificateCreator;
-import org.eapo.service.esign.service.phoenix.DocLoadManager;
-import org.eapo.service.esign.service.phoenix.PhoenixService;
-import org.epo.utils.EPODate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -13,11 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.security.Security;
 
 @SpringBootApplication
@@ -26,6 +18,7 @@ import java.security.Security;
         "org.eapo.service.esign.service",
         "org.eapo.service.esign.service.converter",
         "org.eapo.service.esign.service.phoenix",
+        "org.eapo.service.esign.service.stamper",
         "org.eapo.service.esign.crypto",
         "org.eapo.service.esign.exception"
 })

@@ -10,14 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -28,9 +21,7 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-import static java.util.Arrays.asList;
-
-// @Ignore
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class EsignApplicationTests {
@@ -47,7 +38,7 @@ public class EsignApplicationTests {
     private UserCertificateCreator userCertificateCreator;
 
     @Before
-    public void before(){
+    public void before() {
         EsignApplication.addBouncyCastleAsSecurityProvider();
     }
 
@@ -57,13 +48,14 @@ public class EsignApplicationTests {
         rootCertificateCreator.generateSelfSignedX509Certificate();
     }
 
-
+    @Ignore
     @Test
     public void createUserCert() throws CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, OperatorCreationException, KeyStoreException, NoSuchProviderException, IOException {
 
         userCertificateCreator.create("Сталь", "astal");
     }
 
+    @Ignore
     @Test
     public void read() throws IOException {
         ImageIO.read(new File(userStampFile));

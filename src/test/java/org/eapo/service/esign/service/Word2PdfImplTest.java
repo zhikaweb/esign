@@ -4,7 +4,6 @@ import org.eapo.service.esign.service.converter.Word2PdfImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,15 +16,7 @@ class Word2PdfImplTest {
     @Test
     void convert() throws IOException {
 
-
-        // System.getProperty("java.library.path");
-
-
-        // String filename = "C:\\Users\\AStal\\projects\\esign\\src\\main\\resources\\jacob.dll";
         System.out.println(System.getProperty("java.library.path"));
-
-        //  new eapo.commons.word2pdf.Word2PDfConverter().convert(new File(getClass().getClassLoader().getResource ("word.doc").getFile()));
-
 
         byte[] word = Files.readAllBytes(new File(getClass().getClassLoader().getResource("word4.doc").getFile()).toPath());
 

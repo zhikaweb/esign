@@ -1,4 +1,4 @@
-package org.eapo.service.esign.service;
+package org.eapo.service.esign.service.stamper;
 
 import com.lowagie.text.DocumentException;
 

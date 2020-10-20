@@ -14,11 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
@@ -27,8 +28,8 @@ public class SignerPdfServiceImpl implements SignerPdfService {
 
     private static Logger logger = LoggerFactory.getLogger(SignerPdfServiceImpl.class.getName());
 
-    @Autowired
-    StampTextCreator stampText;
+    //  @Autowired
+    //  StampTextCreator stampText;
 
 
     @Autowired
@@ -88,15 +89,15 @@ public class SignerPdfServiceImpl implements SignerPdfService {
 
         logger.debug("getting data from keystore...");
         try {
-          //  FileInputStream inputStream = new FileInputStream(keystore);
+            //  FileInputStream inputStream = new FileInputStream(keystore);
             KeyStore keyStore = keyStoreHelper.load(certHolder);
 
-             java.security.cert.Certificate cert = keyStore.getCertificate(certHolder);
-             x509 = (X509Certificate) cert;
-             privateKey = (PrivateKey) keyStore.getKey(certHolder, keystorePassword.toCharArray());
+            java.security.cert.Certificate cert = keyStore.getCertificate(certHolder);
+            x509 = (X509Certificate) cert;
+            privateKey = (PrivateKey) keyStore.getKey(certHolder, keystorePassword.toCharArray());
 
 
-        } catch (NoSuchFileException e){
+        } catch (NoSuchFileException e) {
 
             try {
 
@@ -108,14 +109,12 @@ public class SignerPdfServiceImpl implements SignerPdfService {
                 x509 = (X509Certificate) cert;
                 privateKey = (PrivateKey) keyStore.getKey(KeyStoreHelper.CA, keystorePassword.toCharArray());
 
-            } catch (Exception ex){
+            } catch (Exception ex) {
 
                 throw new EsignException("Error on load ROOT Cert! " + ex.getMessage());
             }
 
-        }
-
-        catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             logger.error("Key store {} not found!", keystore);
             throw new EsignException("Key store " + keystore + " not found!");
         } catch (IOException e) {
@@ -132,33 +131,33 @@ public class SignerPdfServiceImpl implements SignerPdfService {
 
         logger.debug("Set stamp and sign...");
 
-      try {
-          PdfReader reader = new PdfReader(pdf);
+        try {
+            PdfReader reader = new PdfReader(pdf);
 
-          PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
-          PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
-          appearance.setCertificate(x509);
+            PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
+            PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
+            appearance.setCertificate(x509);
 
-          logger.debug("set Text Layer at stamp...");
-          appearance.setLayer2Text(stampText.getCertText(x509));
+            logger.debug("set Text Layer at stamp...");
+            // appearance.setLayer2Text(stampText.getCertText(x509));
 
-          logger.debug("setVisibleSignatureRotated...");
-        //  setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
+            logger.debug("setVisibleSignatureRotated...");
+            //  setVisibleSignatureRotated(stamper, appearance, new Rectangle(stampLlx, stampLly, stampUrx, stampUry), stampPage, null);
 
-          ExternalSignature externalSignature = new PrivateKeySignature(privateKey, hashAlgorithm, null);
-          ExternalDigest externalDigest = new BouncyCastleDigest();
+            ExternalSignature externalSignature = new PrivateKeySignature(privateKey, hashAlgorithm, null);
+            ExternalDigest externalDigest = new BouncyCastleDigest();
 
-          logger.debug("Making signature...");
-          MakeSignature.signDetached(appearance, externalDigest, externalSignature, new Certificate[]{x509}, null, null, null, 0, MakeSignature.CryptoStandard.CMS);
+            logger.debug("Making signature...");
+            MakeSignature.signDetached(appearance, externalDigest, externalSignature, new Certificate[]{x509}, null, null, null, 0, MakeSignature.CryptoStandard.CMS);
 
 
-          os.flush();
-          os.close();
+            os.flush();
+            os.close();
 
-      } catch (Exception e){
-          logger.error(e.getMessage());
-          throw new EsignException(e.getMessage());
-      }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new EsignException(e.getMessage());
+        }
         logger.debug("Stamp & sign process finished");
         return os.toByteArray();
     }

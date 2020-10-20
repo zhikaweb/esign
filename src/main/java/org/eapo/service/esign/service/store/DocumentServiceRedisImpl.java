@@ -40,7 +40,7 @@ public class DocumentServiceRedisImpl implements DocumentService {
 
     @Override
     public Long delete(String id) {
-        return  hashOperations.delete(correspPool, id);
+        return hashOperations.delete(correspPool, id);
     }
 
 
