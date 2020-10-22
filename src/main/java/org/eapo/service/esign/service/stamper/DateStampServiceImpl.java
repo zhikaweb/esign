@@ -19,10 +19,10 @@ public class DateStampServiceImpl implements DateStampService {
     DateStampCreator dateStampCreator;
 
 
-    @Value("${esigner.datestamp.position.height:750}")
+    @Value("${esigner.datestamp.position.height:600}")
     float datePositionHeight;
 
-    @Value("${esigner.datestamp.position.width:430}")
+    @Value("${esigner.datestamp.position.width:50}")
     Integer datePositionWidth;
 
     @Override
