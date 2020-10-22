@@ -12,5 +12,5 @@ public interface DocumentService {
 
     Long delete(String id);
 
-
+    boolean isExists(Document document);
 }

@@ -15,6 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @CrossOrigin
 @RestController()
 @RequestMapping("/document")
@@ -74,7 +78,22 @@ public class UploadController {
     }
 
 
-    private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
+    @RequestMapping(value = "/filterexists", method = RequestMethod.POST)
+    public ResponseEntity<List<Document>> uploadFile(@RequestBody List<Document> documents){
+
+        List<Document> storedDocs = new ArrayList<>();
+
+        documents.forEach(doc->{
+           if (uploadService.isExists(doc)){
+               storedDocs.add(doc);
+           }
+
+        });
+        return ResponseEntity.ok().body(storedDocs);
+    };
+
+
+        private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
         Resource resource = new ByteArrayResource(res);
         return ResponseEntity.ok()
                 .headers(header)

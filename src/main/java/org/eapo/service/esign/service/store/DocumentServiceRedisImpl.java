@@ -43,5 +43,10 @@ public class DocumentServiceRedisImpl implements DocumentService {
         return hashOperations.delete(correspPool, id);
     }
 
+    @Override
+    public boolean isExists(Document document) {
+      return  ( hashOperations.get(correspPool, document.getId())!=null);
+    }
+
 
 }

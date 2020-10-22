@@ -40,4 +40,9 @@ public class DocumentServiceStub implements DocumentService {
     public Long delete(String id) {
         return null;
     }
+
+    @Override
+    public boolean isExists(Document document) {
+        return true;
+    }
 }

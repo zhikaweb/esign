@@ -87,4 +87,9 @@ public class UploadServiceImpl implements UploadService {
     public Long deleteFile(String idappli, Integer odcorresp) {
         return documentService.delete(Document.createId(idappli, odcorresp));
     }
+
+    @Override
+    public boolean isExists(Document doc) {
+        return documentService.isExists(doc);
+    }
 }

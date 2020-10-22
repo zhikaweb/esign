@@ -63,7 +63,7 @@ public class StamperServiceImpl implements StamperService {
         float width = stampPositionWidth;// + r.getWidth() - deliverImg.getWidth();
         float height = stampPositionHeight;
 
-        return stamperHelper.doStamp(pdf, stamp, width, height);
+        return stamperHelper.doStamp(pdf, stamp, width, height, true);
     }
 
 
