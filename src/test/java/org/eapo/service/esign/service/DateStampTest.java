@@ -28,7 +28,7 @@ public class DateStampTest {
         File file = new File(classLoader.getResource("300_2.pdf").getFile());
         byte[] pdf = Files.readAllBytes(file.toPath());
 
-        byte[] res = dateStampService.doStamp(pdf, "2020.01.02");
+        byte[] res = dateStampService.doStamp(pdf, "22.10.2020");
 
         try (FileOutputStream fos = new FileOutputStream("C:\\\\TEMP\\esigner\\res.pdf")) {
             fos.write(res);
