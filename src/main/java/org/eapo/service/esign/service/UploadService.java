@@ -10,4 +10,6 @@ public interface UploadService {
     Document downloadFile(String idappli, Integer odcorresp) throws Exception;
 
     Long deleteFile(String idappli, Integer odcorresp);
+
+    boolean isExists(Document doc);
 }

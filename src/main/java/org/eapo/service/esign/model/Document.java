@@ -20,6 +20,9 @@ public class Document implements Serializable {
         return idappli + ID_DELIMITER + odcorresp;
     }
 
+
+    public Document() {}
+
     public Document(String idappli, Integer odcorresp, byte[] body) {
         this.idappli = idappli;
         this.odcorresp = odcorresp;

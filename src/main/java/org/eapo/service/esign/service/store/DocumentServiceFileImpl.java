@@ -55,4 +55,10 @@ public class DocumentServiceFileImpl implements DocumentService {
         Path path = Paths.get(fileStorePath, id + ".pdf");
         return path.toFile().delete() ? 1L : 0L;
     }
+
+    @Override
+    public boolean isExists(Document document) {
+        Path path = Paths.get(fileStorePath, document.getId() + ".pdf");
+        return path.toFile().exists();
+    }
 }
