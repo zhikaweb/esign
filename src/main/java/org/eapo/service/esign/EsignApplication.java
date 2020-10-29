@@ -20,7 +20,8 @@ import java.security.Security;
         "org.eapo.service.esign.service.phoenix",
         "org.eapo.service.esign.service.stamper",
         "org.eapo.service.esign.crypto",
-        "org.eapo.service.esign.exception"
+        "org.eapo.service.esign.exception",
+        "org.eapo.service.esign.ws"
 })
 public class EsignApplication {
 

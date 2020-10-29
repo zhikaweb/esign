@@ -1,0 +1,24 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://service.upload.phoenix.eapo.org"
+           targetNamespace="http://service.upload.phoenix.eapo.org" elementFormDefault="qualified">
+
+    <xs:element name="upload2PhoenixRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="file" type="xs:base64Binary"/>
+                <xs:element name="dosier" type="xs:string"/>
+                <xs:element name="doccode" type="xs:string"/>
+                <xs:element name="dtsend" type="xs:date" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="upload2PhoenixResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isSaved" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
