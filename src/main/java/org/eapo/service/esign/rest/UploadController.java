@@ -39,7 +39,7 @@ public class UploadController {
                                                @RequestParam("certHolder") String certHolder,
                                                @RequestParam(value = "save", defaultValue = "true") String saveToStore) throws Exception {
 
-        logger.info("Uploading file idappli = {}, odcorresp = {}, signer = {}, file size = {}", idappli, odcorresp, signer, file.getBytes());
+        logger.info("Uploading file idappli = {}, odcorresp = {}, signer = {}, file size = {}", idappli, odcorresp, signer, file.getBytes().length);
         Document document = uploadService.uploadFile(file, idappli, odcorresp, signer, certHolder, saveToStore);
         String fileName = document.getId() + RESPONSE_FILE_EXT;
         logger.debug("Sending response file {}", fileName);
@@ -60,6 +60,20 @@ public class UploadController {
         String fileName = document.getId() + RESPONSE_FILE_EXT;
         logger.debug("Sending response file {}", fileName);
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());
+    }
+
+
+    @RequestMapping(value = "/checkFile", method = RequestMethod.GET)
+    public ResponseEntity checkFile(@RequestParam("idappli") String idappli, @RequestParam("odcorresp") Integer odcorresp) throws Exception {
+
+        logger.info("Downloading document by idappli = {}, odcorresp = {}", idappli, odcorresp);
+        Document document = new Document(idappli, odcorresp, null);
+
+        if (!uploadService.isExists(document)){
+            return ResponseEntity.notFound().allow(HttpMethod.GET).build();
+        };
+
+        return ResponseEntity.ok().allow(HttpMethod.GET).build();
     }
 
     @RequestMapping(method = RequestMethod.DELETE)

@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.util.Date;
 
 @Service
 public class PhoenixServiceStub implements PhoenixService {
 
     private static Logger logger = LoggerFactory.getLogger(PhoenixServiceStub.class.getName());
-
     @Override
-    public void upload(String dossier, byte[] pdf, String doccode) throws Exception {
+    public void upload(String dossier, byte[] pdf, String doccode, Date date) throws Exception {
 
         logger.info("uploading!");
 
@@ -23,7 +23,8 @@ public class PhoenixServiceStub implements PhoenixService {
 
         short type = 212;
         String annotation = "";
-        EPODate aDate = new EPODate();
+        java.sql.Date sDate = new java.sql.Date(date.getTime());
+        EPODate aDate = new EPODate(sDate);
 
         // String docSource = "C:\\desc_amnd.pdf";
 
@@ -45,6 +46,9 @@ public class PhoenixServiceStub implements PhoenixService {
         String filter = ".pdf";
         File[] files = {new File(f.getAbsolutePath())};
         docLoadManager.addFromLocation(files, filter);
+
+
+        logger.info("uploading file to dosier = {}, type = {}, annotation = {}, aDate = {}, doccode = {}, path = {}, procedure = {}, isSendMsg = {}, sendMsgToUser = {}, sendMsgToTeam = {}, textMailBox = {}, historyStr = {} ", dossier, type, annotation, aDate, doccode, f.getAbsolutePath(), procedure, isSendMsg, sendMsgToUser, sendMsgToTeam, textMailBox, historyStr);
 
         docLoadManager.load(dossier, type, annotation, aDate, doccode, f.getAbsolutePath(), procedure, isSendMsg, sendMsgToUser, sendMsgToTeam, textMailBox, historyStr);
 
