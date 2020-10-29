@@ -42,13 +42,9 @@ public class DateStampCreatorImpl implements DateStampCreator {
         gO.setColor(Color.black);
         gO.setFont(new Font(dataStampFont, Font.BOLD, dataStampFontSize));
 
-        gO.drawString("ОТПРАВЛЕНО",
-                (int) (img.getWidth() / 20),
-                (int) (img.getHeight() / 2));
-
         gO.drawString(date,
                 (int) (img.getWidth() / 20),
-                (int) (img.getHeight() / 1));
+                (int) (img.getHeight() / 2));
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
