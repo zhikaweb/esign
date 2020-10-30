@@ -23,7 +23,9 @@ public class PhoenixServiceStub implements PhoenixService {
 
         short type = 212;
         String annotation = "";
-        java.sql.Date sDate = new java.sql.Date(date.getTime());
+
+        java.sql.Date sDate = date==null? new java.sql.Date(System.currentTimeMillis()):new java.sql.Date(date.getTime()) ;
+
         EPODate aDate = new EPODate(sDate);
 
         // String docSource = "C:\\desc_amnd.pdf";

@@ -187,10 +187,19 @@
 			<version>5.1.27</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>eapo.phoenix</groupId>
 			<artifactId>phx-helper</artifactId>
 			<version>1.5.4</version>
+
+			<exclusions>
+				<exclusion>  <!-- declare the exclusion here -->
+					<groupId>ephoenix</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
+			</exclusions>
+
 		</dependency>
 
 		<dependency>

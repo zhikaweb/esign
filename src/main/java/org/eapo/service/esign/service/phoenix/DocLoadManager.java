@@ -370,22 +370,7 @@ public class DocLoadManager {
         return this.defDirectory;
     }
 
-    /*
-    public static void main(String[] args) throws Exception {
-        DocLoadManager tmpMgr = new DocLoadManager();
-        DocLoadFrame tmp = new DocLoadFrame();
-        tmp.setDocLoadManager(tmpMgr);
 
-        try {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        tmp.setTitle(tmp.getTitle() + " - " + tmpMgr.props.getProperty("org.epoline.jsf.Groups", "Unknown Group"));
-        tmp.setVisible(true);
-    }
-*/
     public void initialize() throws Exception {
         this.props = new Properties();
 
@@ -471,4 +456,5 @@ public class DocLoadManager {
     public boolean isSelectableSourceKind() {
         return this.selectableSourceKind;
     }
+
 }
