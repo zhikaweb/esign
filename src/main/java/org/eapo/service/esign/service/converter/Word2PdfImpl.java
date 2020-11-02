@@ -11,7 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-@Service
+// @Service
 public class Word2PdfImpl implements Word2Pdf {
 
     public byte[] convert(byte[] docx) throws IOException {

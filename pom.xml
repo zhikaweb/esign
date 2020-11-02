@@ -223,6 +223,22 @@
 			<version>2.1.23</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com</groupId>
+			<artifactId>jacob</artifactId>
+			<version>1.16.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>hive</groupId>
+			<artifactId>hive-core</artifactId>
+			<version>2.9.03.02</version>
+			<exclusions>
+				
+			</exclusions>
+		</dependency>
+
+
 	</dependencies>
 
 	<profiles>

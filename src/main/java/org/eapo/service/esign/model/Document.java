@@ -70,4 +70,12 @@ public class Document implements Serializable {
         return createId(getIdappli(), getOdcorresp());
     }
 
+    @Override
+    public String toString() {
+        return "Document{" +
+                "idappli='" + idappli + '\'' +
+                ", odcorresp=" + odcorresp +
+                ", version=" + version +
+                '}';
+    }
 }

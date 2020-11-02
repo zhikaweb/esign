@@ -40,7 +40,9 @@ public class UploadServiceImpl implements UploadService {
             pdf = converter2PdflService.convert(file.getBytes());
         } catch (Exception e) {
 
-            logger.error("error converting to pdf!");
+            logger.error("error converting to pdf : ", e.getMessage()) ;
+            e.printStackTrace();
+
             throw new EsignException("error converting to pdf!", e);
         }
 
