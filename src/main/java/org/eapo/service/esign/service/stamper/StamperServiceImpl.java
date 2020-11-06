@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 @Service
 public class StamperServiceImpl implements StamperService {
@@ -28,15 +29,30 @@ public class StamperServiceImpl implements StamperService {
     @Value("${esigner.userstamp.position.width}")
     Integer stampPositionWidth;
 
+    @Value("${esigner.userstamp.pattern:''}")
+    String stampPattern;
+
     @Autowired
     UserStampCreator userStampCreator;
 
     @Autowired
     KeyStoreHelper keyStoreHelper;
 
+    @Autowired
+    TextPositionFinder textPositionFinder;
 
-    @Override
-    public byte[] doStamp(byte[] pdf, String certHolder, Integer fpage, Integer lpage) throws IOException, DocumentException {
+    public byte[] doStamp(byte[] pdf, List<String> certHolders, Integer fpage, Integer lpage) throws IOException, DocumentException {
+
+        int i = 1;
+        for (String certHolder: certHolders) {
+            pdf = doStamp(pdf, certHolder, i, fpage, lpage);
+            i++;
+        }
+        return pdf;
+    }
+
+
+    public byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fpage, Integer lpage) throws IOException, DocumentException {
         logger.debug("Making stamp for user {}", certHolder);
 
         X509Certificate cert = null;
@@ -64,6 +80,15 @@ public class StamperServiceImpl implements StamperService {
 
         float width = stampPositionWidth;// + r.getWidth() - deliverImg.getWidth();
         float height = stampPositionHeight;
+
+        if (stampPattern.length()>0){
+            String pattern = stampPattern + pos;
+            TextPositionFinder.Position position = textPositionFinder.position(pdf, pattern);
+            if (position.isFound()){
+              width = position.getX();
+              height = position.getY();
+            }
+        }
 
         return stamperHelper.doStamp(pdf, stamp, width, height, fpage,lpage);
 

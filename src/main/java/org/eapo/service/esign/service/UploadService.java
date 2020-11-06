@@ -3,13 +3,14 @@ package org.eapo.service.esign.service;
 import org.eapo.service.esign.model.Document;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 public interface UploadService {
     Document uploadFile(MultipartFile file,
                         String idappli,
                         Integer odcorresp,
-                        String signer,
-                        String certHolder,
+                        List<String> certHolder,
                         String saveToStore,
                         Integer fpage,
                         Integer lpage);

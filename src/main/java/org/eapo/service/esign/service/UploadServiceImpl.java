@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 public class UploadServiceImpl implements UploadService {
 
@@ -34,8 +36,7 @@ public class UploadServiceImpl implements UploadService {
     public Document uploadFile(MultipartFile file,
                                String idappli,
                                Integer odcorresp,
-                               String signer,
-                               String certHolder,
+                               List<String> certHolders,
                                String saveToStore,
                                Integer fpage,
                                Integer lpage) {
@@ -56,8 +57,7 @@ public class UploadServiceImpl implements UploadService {
         byte[] stamped;
 
         try {
-            logger.debug("Set stamp to file for signer {} ...", signer);
-            stamped = stamperService.doStamp(pdf, certHolder, fpage, lpage);
+            stamped = stamperService.doStamp(pdf, certHolders, fpage, lpage);
         } catch (Exception e) {
             logger.error("error setting user stamp!");
             throw new EsignException("error setting user stamp!", e);
@@ -67,7 +67,7 @@ public class UploadServiceImpl implements UploadService {
         byte[] signed;
         try {
             logger.debug("Adding e-signature...");
-            signed = signerPdfService.sign(stamped, certHolder);
+            signed = signerPdfService.sign(stamped, certHolders);
 
         } catch (Exception e) {
             logger.error("error sign process!");

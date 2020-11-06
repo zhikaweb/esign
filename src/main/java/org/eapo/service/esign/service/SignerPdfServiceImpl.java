@@ -2,6 +2,7 @@ package org.eapo.service.esign.service;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.List;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
@@ -82,6 +83,14 @@ public class SignerPdfServiceImpl implements SignerPdfService {
     private float stampAbsY;
 
     @Override
+    public byte[] sign(byte[] pdf, java.util.List<String> certHolders){
+
+        for (String certHolder : certHolders){
+            pdf = sign(pdf, certHolder);
+        }
+        return pdf;
+    }
+
     public byte[] sign(byte[] pdf, String certHolder) {
 
         X509Certificate x509 = null;
