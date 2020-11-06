@@ -18,7 +18,7 @@ public class StamperHelper {
 
     private static Logger logger = LoggerFactory.getLogger(StamperHelper.class.getName());
 
-    public byte[] doStamp(byte[] pdf, byte[] stamp, float width, float height, boolean stampAllPages) {
+    public byte[] doStamp(byte[] pdf, byte[] stamp, float width, float height, int fPage, int lPage) {
 
         InputStream pdfStream = new ByteArrayInputStream(pdf);
 
@@ -37,11 +37,13 @@ public class StamperHelper {
             PdfContentByte content;
 
             int lastPage = pdfReader.getNumberOfPages();
-            if (!stampAllPages){
-                lastPage = 1;
+            if (lPage > 0) {
+                lastPage = Math.min(lastPage, lPage);
             }
 
-            for (int page = 1; page <= lastPage; page++) {
+            logger.debug("Do stamp from page {} to page {}",fPage,lastPage);
+
+            for (int page = fPage; page <= lastPage; page++) {
                 logger.debug("Stamp at page {} ", page);
                 content = pdfStamper.getOverContent(page);
                 content.addImage(deliverImg);

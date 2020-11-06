@@ -1,5 +1,6 @@
 package org.eapo.service.esign.service.stamper;
 
+import com.lowagie.text.DocumentException;
 import org.eapo.service.esign.crypto.KeyStoreHelper;
 import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
@@ -32,9 +34,9 @@ public class StamperServiceImpl implements StamperService {
     @Autowired
     KeyStoreHelper keyStoreHelper;
 
-    @Override
-    public byte[] doStamp(byte[] pdf, String certHolder) {
 
+    @Override
+    public byte[] doStamp(byte[] pdf, String certHolder, Integer fpage, Integer lpage) throws IOException, DocumentException {
         logger.debug("Making stamp for user {}", certHolder);
 
         X509Certificate cert = null;
@@ -63,7 +65,8 @@ public class StamperServiceImpl implements StamperService {
         float width = stampPositionWidth;// + r.getWidth() - deliverImg.getWidth();
         float height = stampPositionHeight;
 
-        return stamperHelper.doStamp(pdf, stamp, width, height, true);
+        return stamperHelper.doStamp(pdf, stamp, width, height, fpage,lpage);
+
     }
 
 

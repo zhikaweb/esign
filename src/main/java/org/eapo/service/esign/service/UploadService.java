@@ -5,7 +5,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface UploadService {
-    Document uploadFile(MultipartFile file, String idappli, Integer odcorresp, String signer, String certHolder, String saveToStore);
+    Document uploadFile(MultipartFile file,
+                        String idappli,
+                        Integer odcorresp,
+                        String signer,
+                        String certHolder,
+                        String saveToStore,
+                        Integer fpage,
+                        Integer lpage);
 
     Document downloadFile(String idappli, Integer odcorresp) throws Exception;
 

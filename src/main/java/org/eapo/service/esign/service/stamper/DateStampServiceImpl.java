@@ -33,7 +33,7 @@ public class DateStampServiceImpl implements DateStampService {
         float width = datePositionWidth;
         float height = datePositionHeight;
 
-        return stamperHelper.doStamp(pdf, stamp, width, height, false);
+        return stamperHelper.doStamp(pdf, stamp, width, height, 1,1);
 
     }
 }

@@ -33,7 +33,7 @@ public class StampTest {
 
         byte[] pdf = Files.readAllBytes(file.toPath());
 
-        byte[] res = stamperService.doStamp(pdf, "astal");
+        byte[] res = stamperService.doStamp(pdf, "astal",1,1);
 
         try (FileOutputStream fos = new FileOutputStream("C:\\TEMP\\doc-signer\\res.pdf")) {
             fos.write(res);
