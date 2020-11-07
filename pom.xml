@@ -186,21 +186,22 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.27</version>
 		</dependency>
+		<!--
 
+            <dependency>
+                <groupId>eapo.phoenix</groupId>
+                <artifactId>phx-helper</artifactId>
+                <version>1.5.4</version>
 
-		<dependency>
-			<groupId>eapo.phoenix</groupId>
-			<artifactId>phx-helper</artifactId>
-			<version>1.5.4</version>
-
-			<exclusions>
-				<exclusion>  <!-- declare the exclusion here -->
+                <exclusions>
+                    <exclusion>
 					<groupId>ephoenix</groupId>
 					<artifactId>jaxb-impl</artifactId>
 				</exclusion>
 			</exclusions>
 
 		</dependency>
+
 
 		<dependency>
 			<groupId>ephoenix</groupId>
@@ -237,7 +238,7 @@
 				
 			</exclusions>
 		</dependency>
-
+-->
 
 	</dependencies>
 

@@ -1,11 +1,15 @@
 package org.eapo.service.esign.service;
 
+import com.itextpdf.kernel.pdf.PdfReader;
+
+import com.itextpdf.signatures.*;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.List;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.*;
-import com.itextpdf.text.pdf.security.*;
+//import com.itextpdf.text.pdf.*;
+//import com.itextpdf.text.pdf.security.*;
+// import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import org.eapo.service.esign.crypto.KeyStoreHelper;
 import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -141,11 +146,40 @@ public class SignerPdfServiceImpl implements SignerPdfService {
         logger.debug("Set stamp and sign...");
 
         try {
-            PdfReader reader = new PdfReader(pdf);
+            PdfReader reader = new PdfReader(new ByteArrayInputStream(pdf));
 
+
+          //  PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), tmp,
+          //          new StampingProperties().UseAppendMode());
+
+            PdfReader pdfReader = new PdfReader(new ByteArrayInputStream(pdf));
+            PdfSigner signer = new PdfSigner(pdfReader, os, true);
+
+            PdfSignatureAppearance appearance = signer.getSignatureAppearance();
+                 //   .setReason(reason)
+                 //   .setLocation(location)
+                //    .setReuseAppearance(false);
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+           // appearance
+             //       .setPageRect(rect)
+          //          .setPageNumber(1);
+          //  signer.setFieldName("sig");
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(privateKey, hashAlgorithm, cryptoprovider);
+            IExternalDigest digest = new BouncyCastleDigest();
+
+            signer.signDetached(digest, pks, new Certificate[]{x509}, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+
+            //  PdfSigner signer = new PdfSigner(pdfReader, os, true);
+
+
+         //   signer.signDetached();
+/*
             PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
             PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
-            appearance.setCertificate(x509);
+        //    appearance.setCertificate(x509);
+
+        //    appearance.setCertificationLevel(PdfSignatureAppearance.NOT_CERTIFIED);
 
             logger.debug("set Text Layer at stamp...");
             // appearance.setLayer2Text(stampText.getCertText(x509));
@@ -159,7 +193,7 @@ public class SignerPdfServiceImpl implements SignerPdfService {
             logger.debug("Making signature...");
             MakeSignature.signDetached(appearance, externalDigest, externalSignature, new Certificate[]{x509}, null, null, null, 0, MakeSignature.CryptoStandard.CMS);
 
-
+*/
             os.flush();
             os.close();
 
@@ -171,7 +205,7 @@ public class SignerPdfServiceImpl implements SignerPdfService {
         return os.toByteArray();
     }
 
-
+/*
     private void setVisibleSignatureRotated(PdfStamper stamper, PdfSignatureAppearance appearance, Rectangle pageRect, int page, String fieldName) throws DocumentException, IOException {
         float height = pageRect.getHeight();
         float width = pageRect.getWidth();
@@ -203,5 +237,5 @@ public class SignerPdfServiceImpl implements SignerPdfService {
         n2Layer.addImage(textImg);
     }
 
-
+*/
 }

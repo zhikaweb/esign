@@ -1,10 +1,12 @@
 package org.eapo.service.esign.service.converter;
 
+/*
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 import commons.msoffice.wrappers.Documents;
 import commons.msoffice.wrappers.Word;
 import commons.msoffice.wrappers.WordDocument;
+*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,11 @@ import java.text.SimpleDateFormat;
  */
 @Service
 public class Word2PDfConverter implements Word2Pdf{
+	@Override
+	public byte[] convert(byte[] file) throws IOException {
+		return file;
+	}
+/*
 	public static final Integer wdFormatPdf = new Integer(17);
 
 	private Word word = Word.getInstance();;
@@ -65,5 +72,5 @@ public class Word2PDfConverter implements Word2Pdf{
 		return pdfFile;
 	}
 
-
+*/
 }

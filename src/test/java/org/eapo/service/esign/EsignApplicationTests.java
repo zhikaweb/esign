@@ -21,7 +21,7 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-@Ignore
+// @Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class EsignApplicationTests {
@@ -48,11 +48,11 @@ public class EsignApplicationTests {
         rootCertificateCreator.generateSelfSignedX509Certificate();
     }
 
-    @Ignore
+  //  @Ignore
     @Test
     public void createUserCert() throws CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, OperatorCreationException, KeyStoreException, NoSuchProviderException, IOException {
 
-        userCertificateCreator.create("Сталь", "astal");
+        userCertificateCreator.create("Путин", "vputin");
     }
 
     @Ignore

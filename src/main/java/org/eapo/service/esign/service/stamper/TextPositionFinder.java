@@ -23,7 +23,7 @@ public class TextPositionFinder {
 
         Position position = new Position();
 
-
+       System.out.println(reader.getNumberOfPages());
         for (int page = 1; page < reader.getNumberOfPages(); page++) {
 
             parser.processContent(page, new TextMarginFinder() {
@@ -31,7 +31,8 @@ public class TextPositionFinder {
                 public void renderText(TextRenderInfo renderInfo) {
                     super.renderText(renderInfo);
 
-                    if (pattern.equals(renderInfo.getText())) {
+                    System.out.println(renderInfo.getText());
+                    if (renderInfo.getText().contains(pattern)) {
 
                         float x = renderInfo.getBaseline().getStartPoint().get(0);
                         float y = renderInfo.getBaseline().getStartPoint().get(1);

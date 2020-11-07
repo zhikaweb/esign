@@ -15,12 +15,17 @@ public class TextPosFinder {
     public void find() throws IOException {
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("document.pdf").getFile());
-
+      //  File file = new File(classLoader.getResource("document.pdf").getFile());
+        File file = new File("/home/astal/sample.pdf");
         byte[] pdf = Files.readAllBytes(file.toPath());
 
         TextPositionFinder textPositionFinder = new TextPositionFinder();
 
-        TextPositionFinder.Position position = textPositionFinder.position(pdf, "факса");
+        TextPositionFinder.Position position = textPositionFinder.position(pdf, "zzzz");
+
+        System.out.println(position.isFound());
+        System.out.println(position.getX());
+        System.out.println(position.getY());
+
     }
 }

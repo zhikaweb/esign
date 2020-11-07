@@ -29,7 +29,7 @@ public class StamperServiceImpl implements StamperService {
     @Value("${esigner.userstamp.position.width}")
     Integer stampPositionWidth;
 
-    @Value("${esigner.userstamp.pattern:''}")
+    @Value("${esigner.userstamp.pattern:Signature}")
     String stampPattern;
 
     @Autowired
@@ -82,7 +82,7 @@ public class StamperServiceImpl implements StamperService {
         float height = stampPositionHeight;
 
         if (stampPattern.length()>0){
-            String pattern = stampPattern + pos;
+            String pattern = stampPattern+pos;
             TextPositionFinder.Position position = textPositionFinder.position(pdf, pattern);
             if (position.isFound()){
               width = position.getX();

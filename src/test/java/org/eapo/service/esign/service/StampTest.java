@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -22,20 +25,31 @@ public class StampTest {
     @Autowired
     StamperService stamperService;
 
-    @Ignore
+
+    @Autowired
+    SignerPdfService signerPdfService;
+
+  //  @Ignore
     @Test
-    public void test() throws IOException, DocumentException {
+    public void test() throws Exception {
 
         EsignApplication.addBouncyCastleAsSecurityProvider();
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("document.pdf").getFile());
+        File file = new File(classLoader.getResource("signature.pdf").getFile());
 
         byte[] pdf = Files.readAllBytes(file.toPath());
 
-        byte[] res = stamperService.doStamp(pdf, "astal",1,1);
+        List<String> certHolders = new ArrayList<>();
+        certHolders.add("astal");
+        certHolders.add("vputin");
 
-        try (FileOutputStream fos = new FileOutputStream("C:\\TEMP\\doc-signer\\res.pdf")) {
+        byte[] res = stamperService.doStamp(pdf, certHolders,1,1);
+
+
+        res =  signerPdfService.sign(res, certHolders);
+
+        try (FileOutputStream fos = new FileOutputStream("/home/astal/res.pdf")) {
             fos.write(res);
         }
     }
