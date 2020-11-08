@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +32,9 @@ public class UploadServiceImpl implements UploadService {
 
     @Autowired
     Converter2PdfService converter2PdflService;
+
+    @Autowired
+    PdfFlatter pdfFlatter;
 
     @Override
     public Document uploadFile(MultipartFile file,
@@ -100,5 +104,17 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public boolean isExists(Document doc) {
         return documentService.isExists(doc);
+    }
+
+    @Override
+    public byte[] flat(List<Document> documents) {
+
+        List<byte[]> pdfs = new ArrayList<>();
+
+        documents.stream()
+                .map(document -> documentService.get(Document.createId(document.getIdappli(), document.getOdcorresp())).getBody())
+                .filter(p->p.length>0).forEach(pdfs::add);
+
+       return pdfFlatter.concat(pdfs);
     }
 }

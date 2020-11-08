@@ -15,8 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin
@@ -24,6 +25,7 @@ import java.util.List;
 @RequestMapping("/document")
 public class UploadController {
 
+    private static final String RESPONSE_JOIN_FILENAME = "united";
     private static Logger logger = LoggerFactory.getLogger(UploadController.class.getName());
     private static final String RESPONSE_FILE_EXT = ".pdf";
 
@@ -105,16 +107,30 @@ public class UploadController {
 
         });
         return ResponseEntity.ok().body(storedDocs);
-    };
+    }
+
+    @RequestMapping(value = "flat", method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity flatList(@RequestBody List<Document> documents){
+        logger.info("Downloading {} documents as one pdf ", documents.size());
+        byte[] united = uploadService.flat(documents);
+        String fileName = getUnitedName();
+        logger.debug("Sending response file {}", fileName);
+        return getResponse(HTTPUtil.getHeaders(fileName), united);
+    }
 
 
-        private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
+    private ResponseEntity<Resource> getResponse(HttpHeaders header, byte[] res) {
         Resource resource = new ByteArrayResource(res);
         return ResponseEntity.ok()
                 .headers(header)
                 .contentLength(res.length)
                 .contentType(MediaType.parseMediaType(MediaType.APPLICATION_PDF_VALUE))
                 .body(resource);
+    }
+
+    private String getUnitedName() {
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        return RESPONSE_JOIN_FILENAME.concat("(").concat(date).concat(")").concat(RESPONSE_FILE_EXT);
     }
 
 

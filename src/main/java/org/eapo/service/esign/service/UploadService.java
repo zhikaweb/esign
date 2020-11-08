@@ -20,4 +20,6 @@ public interface UploadService {
     Long deleteFile(String idappli, Integer odcorresp);
 
     boolean isExists(Document doc);
+
+    byte[] flat(List<Document> documents);
 }
