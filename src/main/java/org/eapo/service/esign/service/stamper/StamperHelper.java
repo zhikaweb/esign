@@ -1,5 +1,6 @@
 package org.eapo.service.esign.service.stamper;
 
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfReader;
@@ -12,13 +13,18 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.List;
+
+/**
+ * ставит штамп stamp на файл pdf на позициях positions
+ */
 
 @Service
 public class StamperHelper {
 
     private static Logger logger = LoggerFactory.getLogger(StamperHelper.class.getName());
 
-    public byte[] doStamp(byte[] pdf, byte[] stamp, float width, float height, int fPage, int lPage) {
+    public byte[] doStamp(byte[] pdf, byte[] stamp, List<TextPositionFinder.Position> positions) {
 
         InputStream pdfStream = new ByteArrayInputStream(pdf);
 
@@ -31,23 +37,20 @@ public class StamperHelper {
             //   PdfContentByte content = pdfStamper.getOverContent(pdfReader.getNumberOfPages());
             Image deliverImg = Image.getInstance(stamp);
 
-            deliverImg.setAbsolutePosition(width, height);
-
             logger.debug("Adding stamp image...");
             PdfContentByte content;
 
-            int lastPage = pdfReader.getNumberOfPages();
-            if (lPage > 0) {
-                lastPage = Math.min(lastPage, lPage);
-            }
+            positions.forEach(position->{
+                logger.debug("Stamp at page {} ", position.getPage());
+                deliverImg.setAbsolutePosition(position.getX(), position.getY());
+                try {
+                    pdfStamper.getOverContent(position.getPage()).addImage(deliverImg);
+                } catch (DocumentException e) {
+                    logger.error("Error on stamp at page {}", position.getPage());
+                    e.printStackTrace();
+                }
 
-            logger.debug("Do stamp from page {} to page {}",fPage,lastPage);
-
-            for (int page = fPage; page <= lastPage; page++) {
-                logger.debug("Stamp at page {} ", page);
-                content = pdfStamper.getOverContent(page);
-                content.addImage(deliverImg);
-            }
+            });
 
             pdfStamper.close();
         } catch (Exception e) {

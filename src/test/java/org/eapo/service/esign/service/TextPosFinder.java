@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class TextPosFinder {
 
@@ -21,11 +22,13 @@ public class TextPosFinder {
 
         TextPositionFinder textPositionFinder = new TextPositionFinder();
 
-        TextPositionFinder.Position position = textPositionFinder.position(pdf, "zzzz");
+        List<TextPositionFinder.Position> positions = textPositionFinder.position(pdf, "zzzz");
 
-        System.out.println(position.isFound());
-        System.out.println(position.getX());
-        System.out.println(position.getY());
+        positions.forEach(position -> {
+            System.out.println(position.isFound());
+            System.out.println(position.getX());
+            System.out.println(position.getY());
+        });
 
     }
 }

@@ -9,11 +9,20 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ ищет паттерн pattern в документе pdf на каждой странице
+ возвращает список Position - по одной позиции для каждой страницы
+ если паттерн не найден на странице то Position isFound = false
+ если паттерн найден на странице то Position isFound = true и координаты
+*/
 
 @Service
 public class TextPositionFinder {
 
-   public Position position(byte[] pdf, String pattern) throws IOException {
+    public List<Position> position(byte[] pdf, String pattern) throws IOException {
 
 
         PdfReader reader = new PdfReader(new ByteArrayInputStream(pdf));
@@ -21,10 +30,15 @@ public class TextPositionFinder {
 
         PdfReaderContentParser parser = new PdfReaderContentParser(reader);
 
-        Position position = new Position();
+        List<Position> positions = new ArrayList<>();
 
-       System.out.println(reader.getNumberOfPages());
+
         for (int page = 1; page < reader.getNumberOfPages(); page++) {
+
+            Position position = new Position();
+            position.setPage(page);
+            position.setFound(false);
+            positions.add(position);
 
             parser.processContent(page, new TextMarginFinder() {
                 @Override
@@ -36,16 +50,16 @@ public class TextPositionFinder {
 
                         float x = renderInfo.getBaseline().getStartPoint().get(0);
                         float y = renderInfo.getBaseline().getStartPoint().get(1);
-                        position.x = x;
-                        position.y = y;
-                        position.found = true;
+                        position.setX(x);
+                        position.setY(y);
+                        position.setFound(true);
                     }
                 }
             });
         }
 
 
-        return position;
+        return positions;
     }
 
     ;
@@ -56,7 +70,9 @@ public class TextPositionFinder {
         private float x;
         private float y;
 
+
         private boolean found = false;
+        private int page;
 
         public float getX() {
             return x;
@@ -80,6 +96,14 @@ public class TextPositionFinder {
 
         public void setFound(boolean found) {
             this.found = found;
+        }
+
+        public void setPage(int page) {
+            this.page = page;
+        }
+
+        public int getPage() {
+            return page;
         }
     }
 

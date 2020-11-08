@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 public class DateStampServiceImpl implements DateStampService {
 
@@ -33,7 +35,12 @@ public class DateStampServiceImpl implements DateStampService {
         float width = datePositionWidth;
         float height = datePositionHeight;
 
-        return stamperHelper.doStamp(pdf, stamp, width, height, 1,1);
+        TextPositionFinder.Position position = new TextPositionFinder.Position();
+        position.setPage(1);
+        position.setX(width);
+        position.setY(height);
+
+        return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
 
     }
 }

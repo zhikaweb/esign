@@ -1,6 +1,7 @@
 package org.eapo.service.esign.service.stamper;
 
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfReader;
 import org.eapo.service.esign.crypto.KeyStoreHelper;
 import org.eapo.service.esign.exception.EsignException;
 import org.slf4j.Logger;
@@ -9,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class StamperServiceImpl implements StamperService {
@@ -41,18 +47,18 @@ public class StamperServiceImpl implements StamperService {
     @Autowired
     TextPositionFinder textPositionFinder;
 
-    public byte[] doStamp(byte[] pdf, List<String> certHolders, Integer fpage, Integer lpage) throws IOException, DocumentException {
+    public byte[] doStamp(byte[] pdf, List<String> certHolders, Integer fPage, Integer lPage) throws IOException, DocumentException {
 
         int i = 1;
         for (String certHolder: certHolders) {
-            pdf = doStamp(pdf, certHolder, i, fpage, lpage);
+            pdf = doStamp(pdf, certHolder, i, fPage, lPage);
             i++;
         }
         return pdf;
     }
 
 
-    public byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fpage, Integer lpage) throws IOException, DocumentException {
+    public byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fPage, Integer lPage) throws IOException, DocumentException {
         logger.debug("Making stamp for user {}", certHolder);
 
         X509Certificate cert = null;
@@ -78,21 +84,60 @@ public class StamperServiceImpl implements StamperService {
 
         byte[] stamp = userStampCreator.build(cert);
 
-        float width = stampPositionWidth;// + r.getWidth() - deliverImg.getWidth();
-        float height = stampPositionHeight;
+        final float width = stampPositionWidth;// + r.getWidth() - deliverImg.getWidth();
+        final float height = stampPositionHeight;
 
-        if (stampPattern.length()>0){
-            String pattern = stampPattern+pos;
-            TextPositionFinder.Position position = textPositionFinder.position(pdf, pattern);
-            if (position.isFound()){
-              width = position.getX();
-              height = position.getY();
-            }
+
+        int lastPage = getNumberOfPages(pdf);
+
+        List<TextPositionFinder.Position> positions;
+
+        // если задан шаблон поиска - ищем его в документе
+        if (stampPattern.length()>0) {
+            String pattern = stampPattern + pos;
+            positions = textPositionFinder.position(pdf, pattern);
+            positions.forEach(p -> {
+                if (!p.isFound()) {
+                    p.setX(width);
+                    p.setY(height);
+                }
+            });
+        } else {
+            // если шаблон поиска не задан - считаем что не нашли совпадения ни на одной странице
+           positions = IntStream.range(1, lastPage+1).mapToObj(i->{
+                TextPositionFinder.Position position = new TextPositionFinder.Position();
+                position.setPage(i);
+                position.setFound(false);
+                return position;
+            }).collect(Collectors.toList());
         }
 
-        return stamperHelper.doStamp(pdf, stamp, width, height, fpage,lpage);
+        // штампики ставим до последней указанной страницы
+            if (lPage > 0) {
+                lastPage = Math.min(lastPage, lPage);
+            }
+
+            final int finalLastPage = lastPage;
+
+            // отбираем страницы которые попадают в диапазон для штампиков
+            List<TextPositionFinder.Position> stampPositions = positions.stream()
+                    .filter(p->((p.getPage()>=fPage) && (p.getPage()<=finalLastPage)))
+                    .collect(Collectors.toList());
+
+            // ставим штампики в нужные позиции
+        return stamperHelper.doStamp(pdf, stamp, stampPositions);
 
     }
 
+    private int getNumberOfPages(byte[] pdf){
+        try(InputStream pdfStream = new ByteArrayInputStream(pdf)){
+            PdfReader pdfReader = new PdfReader(pdfStream);
+            pdfReader.getNumberOfPages();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
 }
