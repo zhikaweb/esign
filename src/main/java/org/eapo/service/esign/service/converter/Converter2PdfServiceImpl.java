@@ -18,7 +18,7 @@ public class Converter2PdfServiceImpl implements Converter2PdfService {
     Word2Pdf word2Pdf;
 
     @Override
-    public byte[] convert(byte[] file) throws IOException {
+    public byte[] convert(byte[] file) throws Exception {
 
         logger.debug("converting to pdf...");
 

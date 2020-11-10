@@ -132,7 +132,7 @@ public class StamperServiceImpl implements StamperService {
     private int getNumberOfPages(byte[] pdf){
         try(InputStream pdfStream = new ByteArrayInputStream(pdf)){
             PdfReader pdfReader = new PdfReader(pdfStream);
-            pdfReader.getNumberOfPages();
+            return pdfReader.getNumberOfPages();
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://service.pdfconverter.eapo.org" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://http://service.pdfconverter.eapo.org" targetNamespace="http://http://service.pdfconverter.eapo.org">
+  <wsdl:types>
+    <xs:schema xmlns:tns="http://service.pdfconverter.eapo.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://service.pdfconverter.eapo.org">
+
+    <xs:element name="convert2PDFRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="file" type="xs:base64Binary"/>
+                <xs:element minOccurs="0" name="srcformat" type="xs:string"/>
+                <xs:element minOccurs="0" name="resformat" type="xs:string"/>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="convert2PDFResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="file" type="xs:base64Binary"/>
+                <xs:element name="converted" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="convert2PDFResponse">
+    <wsdl:part element="sch:convert2PDFResponse" name="convert2PDFResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="convert2PDFRequest">
+    <wsdl:part element="sch:convert2PDFRequest" name="convert2PDFRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PDFConverterPort">
+    <wsdl:operation name="convert2PDF">
+      <wsdl:input message="tns:convert2PDFRequest" name="convert2PDFRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:convert2PDFResponse" name="convert2PDFResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PDFConverterPortSoap11" type="tns:PDFConverterPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="convert2PDF">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="convert2PDFRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="convert2PDFResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PDFConverterPortService">
+    <wsdl:port binding="tns:PDFConverterPortSoap11" name="PDFConverterPortSoap11">
+      <soap:address location="http://192.168.2.150:8090/ws"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

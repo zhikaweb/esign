@@ -2,8 +2,10 @@ package org.eapo.service.esign;
 
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.eapo.service.esign.ws.Convert2PDFClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
@@ -35,6 +38,9 @@ import java.security.Security;
 })
 public class EsignApplication extends WsConfigurerAdapter {
 
+    @Value("${esigner.endpoints.docx2pdf:http://localhost:8090/ws}")
+    private String docx2pdfEndpoint;
+
     private static Logger logger = LoggerFactory.getLogger(EsignApplication.class.getName());
 
     public static void main(String[] args) throws Exception {
@@ -50,6 +56,26 @@ public class EsignApplication extends WsConfigurerAdapter {
         Security.addProvider(new BouncyCastleProvider());
         logger.debug("BouncyCastle is ready!");
     }
+
+
+    @Bean
+    public Jaxb2Marshaller marshaller() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setContextPath("org.eapo.pdfconverter.service");
+        return marshaller;
+    }
+    @Bean
+    public Convert2PDFClient countryClient(Jaxb2Marshaller marshaller) {
+
+        System.out.println(docx2pdfEndpoint);
+
+        Convert2PDFClient client = new Convert2PDFClient();
+        client.setDefaultUri(docx2pdfEndpoint);  //"http://192.168.2.150:8090/ws/"
+        client.setMarshaller(marshaller);
+        client.setUnmarshaller(marshaller);
+        return client;
+    }
+
 
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {

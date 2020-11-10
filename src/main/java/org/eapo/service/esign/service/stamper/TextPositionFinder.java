@@ -33,20 +33,24 @@ public class TextPositionFinder {
         List<Position> positions = new ArrayList<>();
 
 
-        for (int page = 1; page < reader.getNumberOfPages(); page++) {
+        for (int page = 1; page <= reader.getNumberOfPages(); page++) {
+
 
             Position position = new Position();
             position.setPage(page);
             position.setFound(false);
             positions.add(position);
 
+            StringBuilder stringBuilder = new StringBuilder();
             parser.processContent(page, new TextMarginFinder() {
                 @Override
                 public void renderText(TextRenderInfo renderInfo) {
                     super.renderText(renderInfo);
 
-                    System.out.println(renderInfo.getText());
-                    if (renderInfo.getText().contains(pattern)) {
+                    stringBuilder.append(renderInfo.getText());
+                  //  System.out.println(renderInfo.getText());
+                  //  System.out.println(renderInfo.getText());
+                    if ((!position.isFound())&&(stringBuilder.toString().contains(pattern))) {
 
                         float x = renderInfo.getBaseline().getStartPoint().get(0);
                         float y = renderInfo.getBaseline().getStartPoint().get(1);

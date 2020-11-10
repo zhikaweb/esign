@@ -186,7 +186,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.27</version>
 		</dependency>
-		<!--
+
 
             <dependency>
                 <groupId>eapo.phoenix</groupId>
@@ -223,22 +223,6 @@
 			<artifactId>OnlineImportService-cl</artifactId>
 			<version>2.1.23</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com</groupId>
-			<artifactId>jacob</artifactId>
-			<version>1.16.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>hive</groupId>
-			<artifactId>hive-core</artifactId>
-			<version>2.9.03.02</version>
-			<exclusions>
-				
-			</exclusions>
-		</dependency>
--->
 
 	</dependencies>
 
@@ -281,6 +265,29 @@
 					<sources>
 						<source>${project.basedir}/src/main/resources/phoenix-upload.xsd</source>
 					</sources>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.14.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaLanguage>WSDL</schemaLanguage>
+					<generateDirectory>${project.basedir}/src/main/java</generateDirectory>
+					<generatePackage>org.eapo.pdfconverter.service</generatePackage>
+					<schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
+					<schemaIncludes>
+						<include>pdf-converter.wsdl</include>
+					</schemaIncludes>
 				</configuration>
 			</plugin>
 

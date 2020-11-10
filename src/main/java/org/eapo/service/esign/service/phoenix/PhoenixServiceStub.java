@@ -15,15 +15,15 @@ public class PhoenixServiceStub implements PhoenixService {
 
     private static Logger logger = LoggerFactory.getLogger(PhoenixServiceStub.class.getName());
 
-    @Autowired
-    DocLoadManagerImpl docLoadManager;
+  //  @Autowired
+  //  DocLoadManagerImpl docLoadManager;
 
     @Override
     public void upload(String dossier, byte[] pdf, String doccode, Date date) throws Exception {
 
         logger.info("uploading!");
 
-
+        DocLoadManager docLoadManager = new DocLoadManagerImpl();
 
         short type = 212;
         String annotation = "";

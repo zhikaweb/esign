@@ -39,7 +39,7 @@ public class FlatTest {
         byte[] pdf = pdfFlatter.concat(list);
 
 
-        try (FileOutputStream fos = new FileOutputStream("/home/astal/res.pdf")) {
+        try (FileOutputStream fos = new FileOutputStream("/home/astal/signature.pdf")) {
             fos.write(pdf);
         }
 

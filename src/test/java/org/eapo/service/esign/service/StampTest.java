@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -29,6 +30,9 @@ public class StampTest {
     @Autowired
     SignerPdfService signerPdfService;
 
+    @Value("${test.result.path.pdf}")
+    private String resultPathPdf;
+
   //  @Ignore
     @Test
     public void test() throws Exception {
@@ -42,14 +46,14 @@ public class StampTest {
 
         List<String> certHolders = new ArrayList<>();
         certHolders.add("astal");
-        certHolders.add("vputin");
+     //   certHolders.add("vputin");
 
         byte[] res = stamperService.doStamp(pdf, certHolders,1,1);
 
 
         res =  signerPdfService.sign(res, certHolders);
 
-        try (FileOutputStream fos = new FileOutputStream("/home/astal/res.pdf")) {
+        try (FileOutputStream fos = new FileOutputStream(resultPathPdf)) {
             fos.write(res);
         }
     }

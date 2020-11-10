@@ -30,7 +30,7 @@ public class DateStampTest {
 
         byte[] res = dateStampService.doStamp(pdf, "22.10.2020");
 
-        try (FileOutputStream fos = new FileOutputStream("C:\\\\TEMP\\esigner\\res.pdf")) {
+        try (FileOutputStream fos = new FileOutputStream("C:\\\\TEMP\\esigner\\signature.pdf")) {
             fos.write(res);
         }
     }

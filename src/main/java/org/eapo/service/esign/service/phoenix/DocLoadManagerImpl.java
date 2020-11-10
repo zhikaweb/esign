@@ -4,14 +4,14 @@
  */
 package org.eapo.service.esign.service.phoenix;
 
-/*
+
 import org.eapo.phoenix.phxhelper.PhoenixHistory;
 import org.eapo.phoenix.phxhelper.PhoenixMessage;
 import org.epo.utils.*;
 import org.epoline.impexp.jsf.online.imp.cl.OnlineImportServiceDelegate;
 import org.epoline.impexp.jsf.online.imp.dl.LoadDocument;
 import org.epoline.impexp.jsf.online.imp.dl.OnlineImportSession;
-*/
+
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -26,8 +26,9 @@ import java.util.zip.ZipOutputStream;
  * @author Dmitriy Merkushov
  */
 
-@Service
+//@Service
 public class DocLoadManagerImpl implements DocLoadManager {
+  /*
     @Override
     public void load(String dossier, short type, String annotation, Date aDate, String doccode, String docSource, String procedure, boolean isSendMsg, String sendMsgToUser, String sendMsgToTeam, String textMailBox, String historyStr) throws Exception {
 
@@ -38,8 +39,8 @@ public class DocLoadManagerImpl implements DocLoadManager {
 
     }
 
+*/
 
-    /*
     private List<String> toAddList = new LinkedList<String>();
     private String defDoccode;
     private String defDirectory = null;
@@ -251,8 +252,10 @@ public class DocLoadManagerImpl implements DocLoadManager {
                      boolean isSendMsg, String sendMsgToUser, String sendMsgToTeam, String textMailBox, String historyStr) throws Exception {
         boolean success = false;
 
-           EPODate aDate = new EPODate(sDate);
-
+        EPODate aDate = null;
+           if (sDate!=null) {
+              aDate = new EPODate(new java.sql.Date(sDate.getTime()));
+           }
         if (this.toAddList.size() == 0) {
             throw new Exception("No documents found");
         }
@@ -474,5 +477,5 @@ public class DocLoadManagerImpl implements DocLoadManager {
     public boolean isSelectableSourceKind() {
         return this.selectableSourceKind;
     }
-*/
+
 }
