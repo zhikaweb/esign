@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin
 @RestController()
@@ -26,6 +24,7 @@ import java.util.List;
 public class UploadController {
 
     private static final String RESPONSE_JOIN_FILENAME = "united";
+    private static final String CERTHOLDERS_DELIMETR = ";";
     private static Logger logger = LoggerFactory.getLogger(UploadController.class.getName());
     private static final String RESPONSE_FILE_EXT = ".pdf";
 
@@ -37,13 +36,15 @@ public class UploadController {
     public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file,
                                                @RequestParam("idappli") String idappli,
                                                @RequestParam("odcorresp") Integer odcorresp,
-                                               @RequestParam("certHolders") List<String> certHolders,
+                                               @RequestParam("certHolders") String certHolders,
                                                @RequestParam(value = "fpage", defaultValue = "1") Integer fpage,
                                                @RequestParam(value = "lpage", defaultValue = "-1") Integer lpage,
                                                @RequestParam(value = "save", defaultValue = "true") String saveToStore) throws Exception {
 
+
+        List<String> certHoldersList = Arrays.asList(certHolders.split(CERTHOLDERS_DELIMETR));
         logger.info("Uploading file idappli = {}, odcorresp = {}, file size = {}", idappli, odcorresp, file.getBytes().length);
-        Document document = uploadService.uploadFile(file, idappli, odcorresp, certHolders, saveToStore, fpage, lpage);
+        Document document = uploadService.uploadFile(file, idappli, odcorresp, certHoldersList, saveToStore, fpage, lpage);
         String fileName = document.getId() + RESPONSE_FILE_EXT;
         logger.debug("Sending response file {}", fileName);
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());

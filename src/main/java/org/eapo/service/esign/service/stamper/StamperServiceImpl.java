@@ -51,14 +51,14 @@ public class StamperServiceImpl implements StamperService {
 
         int i = 1;
         for (String certHolder: certHolders) {
-            pdf = doStamp(pdf, certHolder, i, fPage, lPage);
+            pdf = doStamp(pdf, certHolder, i, fPage, lPage, certHolders.size()>1);
             i++;
         }
         return pdf;
     }
 
 
-    public byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fPage, Integer lPage) throws IOException, DocumentException {
+    private byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fPage, Integer lPage, boolean multiSign) throws IOException, DocumentException {
         logger.debug("Making stamp for user {}", certHolder);
 
         X509Certificate cert = null;
@@ -122,6 +122,9 @@ public class StamperServiceImpl implements StamperService {
             // отбираем страницы которые попадают в диапазон для штампиков
             List<TextPositionFinder.Position> stampPositions = positions.stream()
                     .filter(p->((p.getPage()>=fPage) && (p.getPage()<=finalLastPage)))
+                    // для документов, подписываемых НЕСКОЛЬКИМИ людьми, подписи ставятся ТОЛЬКО в явно указанные места
+                    // то есть если не задано положение то подпись не ставится (фильтруем)
+                    .filter(p->(!multiSign || p.isFound()))
                     .collect(Collectors.toList());
 
             // ставим штампики в нужные позиции
