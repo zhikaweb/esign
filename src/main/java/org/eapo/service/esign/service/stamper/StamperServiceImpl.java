@@ -47,6 +47,7 @@ public class StamperServiceImpl implements StamperService {
     @Autowired
     TextPositionFinder textPositionFinder;
 
+    @Override
     public byte[] doStamp(byte[] pdf, List<String> certHolders, Integer fPage, Integer lPage) throws IOException, DocumentException {
 
         int i = 1;

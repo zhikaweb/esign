@@ -21,7 +21,7 @@ public class Word2PdfImplTest {
     @Autowired
     Word2PDfConverter word2PDfConverter;
 
-    @Ignore
+   // @Ignore
     @Test
     public void convert() throws Exception {
 

@@ -25,12 +25,16 @@ public class DateStampTest {
     public void test() throws IOException, DocumentException {
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("300_2.pdf").getFile());
+      //  File file = new File(classLoader.getResource("300_2.pdf").getFile());
+//        File file = new File(classLoader.getResource("C:\\esign\\signature.pdf").getFile());
+
+        File file = new File("C:\\esign\\signature.pdf");
+
         byte[] pdf = Files.readAllBytes(file.toPath());
 
         byte[] res = dateStampService.doStamp(pdf, "22.10.2020");
 
-        try (FileOutputStream fos = new FileOutputStream("C:\\\\TEMP\\esigner\\signature.pdf")) {
+        try (FileOutputStream fos = new FileOutputStream("C:\\esign\\res.pdf")) {
             fos.write(res);
         }
     }

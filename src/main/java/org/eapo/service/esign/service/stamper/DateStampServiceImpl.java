@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class DateStampServiceImpl implements DateStampService {
@@ -20,6 +22,8 @@ public class DateStampServiceImpl implements DateStampService {
     @Autowired
     DateStampCreator dateStampCreator;
 
+    @Autowired
+    TextPositionFinder textPositionFinder;
 
     @Value("${esigner.datestamp.position.height:643}")
     float datePositionHeight;
@@ -27,20 +31,49 @@ public class DateStampServiceImpl implements DateStampService {
     @Value("${esigner.datestamp.position.width:165}")
     Integer datePositionWidth;
 
+    @Value("${esigner.datestamp.pattern:DatePattern}")
+    String dateStampPattern;
+
     @Override
     public byte[] doStamp(byte[] pdf, String date) {
 
         byte[] stamp = dateStampCreator.build(date);
 
-        float width = datePositionWidth;
-        float height = datePositionHeight;
-
-        TextPositionFinder.Position position = new TextPositionFinder.Position();
-        position.setPage(1);
-        position.setX(width);
-        position.setY(height);
+        TextPositionFinder.Position position = getPosition(pdf);
 
         return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
 
+    }
+
+    /**
+     * Находим позицию паттерна (шаблона) для штампа на первой странице.
+     * Если не нашли - ставим в координаты по-умолчанию
+     *
+     * @param pdf
+     * @return
+     */
+
+    private TextPositionFinder.Position getPosition(byte[] pdf) {
+
+        float width = datePositionWidth;
+        float height = datePositionHeight;
+
+        TextPositionFinder.Position position = null;
+
+        try {
+            List<TextPositionFinder.Position> positions = textPositionFinder.position(pdf,dateStampPattern);
+             position = positions.get(0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            position = new TextPositionFinder.Position();
+        }
+
+        if (!position.isFound()){
+            position.setPage(1);
+            position.setX(width);
+            position.setY(height);
+        }
+        return position;
     }
 }
