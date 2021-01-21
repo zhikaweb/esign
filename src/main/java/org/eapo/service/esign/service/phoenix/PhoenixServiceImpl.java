@@ -1,5 +1,7 @@
 package org.eapo.service.esign.service.phoenix;
 
+import org.eapo.service.esign.exception.EsignException;
+import org.eapo.service.esign.service.SignerPdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +11,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.Date;
+import java.util.List;
 
 @Service
-public class PhoenixServiceStub implements PhoenixService {
+public class PhoenixServiceImpl implements PhoenixService {
 
-    private static Logger logger = LoggerFactory.getLogger(PhoenixServiceStub.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(PhoenixServiceImpl.class.getName());
 
   //  @Autowired
   //  DocLoadManagerImpl docLoadManager;
+
+
+    @Autowired
+    SignerPdfService signerPdfService;
+
 
     @Override
     public void upload(String dossier, byte[] pdf, String doccode, Date date) throws Exception {
@@ -61,4 +69,22 @@ public class PhoenixServiceStub implements PhoenixService {
         logger.info("file {} was uploaded!", f.getAbsolutePath());
 
     }
+
+    @Override
+    public void signAndUpload(String dossier, List<String> certHolders, byte[] pdf, String doccode, Date date) throws Exception {
+
+        byte[] signed;
+
+        try {
+            logger.debug("Adding e-signature...");
+            signed = signerPdfService.sign(pdf, certHolders);
+
+        } catch (Exception e) {
+            logger.error("error sign process!");
+            throw new EsignException("error sign process!", e);
+        }
+        upload(dossier, signed, doccode, date);
+
+    }
+
 }

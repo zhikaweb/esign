@@ -23,8 +23,8 @@ import java.util.*;
 @RequestMapping("/document")
 public class UploadController {
 
+    public static final String CERTHOLDERS_DELIMETR = ";";
     private static final String RESPONSE_JOIN_FILENAME = "united";
-    private static final String CERTHOLDERS_DELIMETR = ";";
     private static Logger logger = LoggerFactory.getLogger(UploadController.class.getName());
     private static final String RESPONSE_FILE_EXT = ".pdf";
 

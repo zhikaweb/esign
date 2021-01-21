@@ -25,9 +25,6 @@ public class UploadServiceImpl implements UploadService {
     DocumentService documentService;
 
     @Autowired
-    SignerPdfService signerPdfService;
-
-    @Autowired
     StamperService stamperService;
 
     @Autowired
@@ -67,18 +64,7 @@ public class UploadServiceImpl implements UploadService {
             throw new EsignException("error setting user stamp!", e);
         }
 
-
-        byte[] signed;
-        try {
-            logger.debug("Adding e-signature...");
-            signed = signerPdfService.sign(stamped, certHolders);
-
-        } catch (Exception e) {
-            logger.error("error sign process!");
-            throw new EsignException("error sign process!", e);
-        }
-
-        Document document = new Document(idappli, odcorresp, signed);
+        Document document = new Document(idappli, odcorresp, stamped);
 
         if (Boolean.TRUE.toString().equalsIgnoreCase(saveToStore)) {
             logger.debug("Saving to document store...");

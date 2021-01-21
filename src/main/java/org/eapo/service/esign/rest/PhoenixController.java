@@ -16,7 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
+import static org.eapo.service.esign.rest.UploadController.CERTHOLDERS_DELIMETR;
 
 @CrossOrigin
 @RestController()
@@ -39,12 +44,21 @@ public class PhoenixController {
     private String dateFormat;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity upload(@RequestParam("dosier") String dosier,
+    public ResponseEntity signAndUpload(@RequestParam("dosier") String dosier,
                                            @RequestParam("idappli") String idappli,
                                            @RequestParam("odcorresp") Integer odcorresp,
                                            @RequestParam(value = "dtsend", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date dtsend,
-                                           @RequestParam(value = "doccode", defaultValue = "DOCRU") String doccode) throws Exception {
+                                           @RequestParam(value = "doccode", defaultValue = "DOCRU") String doccode,
+                                           @RequestParam(value = "certHolders", required = false) String certHolders
+                                 ) throws Exception {
 
+
+        List<String> certHoldersList = null;
+        if (certHolders!=null){
+           certHoldersList = Arrays.asList(certHolders.split(CERTHOLDERS_DELIMETR));
+        } else {
+             certHoldersList = Collections.emptyList();
+        }
 
         logger.info("Saving document with idappli {} odcorresp {} and doccode {} to dosier {}", idappli, odcorresp, doccode, dosier);
 
@@ -64,7 +78,7 @@ public class PhoenixController {
 
             Date date =  dtsend!=null?dtsend:new Date();
 
-            phoenixService.upload(dosier, res, doccode, date);
+            phoenixService.signAndUpload(dosier, certHoldersList, res, doccode, date);
 
         } catch (Exception e) {
             logger.error("Error on saving document with idappli {} and odcorresp {} to phoenix : {}", idappli, odcorresp, e.getMessage());
