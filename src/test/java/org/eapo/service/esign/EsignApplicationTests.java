@@ -52,7 +52,7 @@ public class EsignApplicationTests {
     @Test
     public void createUserCert() throws CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, OperatorCreationException, KeyStoreException, NoSuchProviderException, IOException {
 
-        userCertificateCreator.create("Путин", "vputin");
+        userCertificateCreator.create("Чудина Н.А.", "nchudina");
     }
 
     @Ignore

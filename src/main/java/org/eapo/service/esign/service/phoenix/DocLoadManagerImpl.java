@@ -248,6 +248,7 @@ public class DocLoadManagerImpl implements DocLoadManager {
         throw new Exception("File is not directory or file, HELP!");
     }
 
+    @Override
     public void load(String dossier, short type, String annotation, Date sDate, String doccode, String docSource, String procedure,
                      boolean isSendMsg, String sendMsgToUser, String sendMsgToTeam, String textMailBox, String historyStr) throws Exception {
         boolean success = false;
