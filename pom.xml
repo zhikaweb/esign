@@ -74,6 +74,13 @@
 			</exclusions>
 		</dependency>
 
+
+        <dependency>
+                           <groupId>madras</groupId>
+                            <artifactId>madras-database</artifactId>
+                            <version>1.9.02</version>
+        </dependency>
+
 		<!-- Junit Test -->
 		<dependency>
 			<groupId>junit</groupId>

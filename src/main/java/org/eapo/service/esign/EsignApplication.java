@@ -1,6 +1,7 @@
 package org.eapo.service.esign;
 
 
+import madras.database.SdoDatabaseBroker;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eapo.service.esign.ws.Convert2PDFClient;
 import org.slf4j.Logger;
@@ -58,6 +59,8 @@ public class EsignApplication extends WsConfigurerAdapter {
     }
 
 
+
+
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
@@ -99,4 +102,10 @@ public class EsignApplication extends WsConfigurerAdapter {
     public XsdSchema uploadSchema() {
         return new SimpleXsdSchema(new ClassPathResource("phoenix-upload.xsd"));
     }
+
+    @Bean
+    public SdoDatabaseBroker madrasBroker(){
+        return new SdoDatabaseBroker();
+    }
+
 }
