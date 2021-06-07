@@ -25,11 +25,11 @@ public class DateStampServiceImpl implements DateStampService {
     @Autowired
     TextPositionFinder textPositionFinder;
 
-    @Value("${esigner.datestamp.position.height:643}")
-    float datePositionHeight;
+  //  @Value("${esigner.datestamp.position.height:643}")
+  //  float datePositionHeight;
 
-    @Value("${esigner.datestamp.position.width:165}")
-    Integer datePositionWidth;
+  //  @Value("${esigner.datestamp.position.width:165}")
+  //  Integer datePositionWidth;
 
     @Value("${esigner.datestamp.pattern:DatePattern}")
     String dateStampPattern;
@@ -41,13 +41,20 @@ public class DateStampServiceImpl implements DateStampService {
 
         TextPositionFinder.Position position = getPosition(pdf);
 
-        return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
-
+        // если нашли паттерн - ставим штампик с датой
+        if (position.isFound()) {
+            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
+            return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
+        }
+        // если не нашли -  не ставим никакой штамп
+        else {
+            logger.info("DatePattern {} not found", dateStampPattern);
+            return pdf;
+        }
     }
 
     /**
      * Находим позицию паттерна (шаблона) для штампа на первой странице.
-     * Если не нашли - ставим в координаты по-умолчанию
      *
      * @param pdf
      * @return
@@ -55,8 +62,8 @@ public class DateStampServiceImpl implements DateStampService {
 
     private TextPositionFinder.Position getPosition(byte[] pdf) {
 
-        float width = datePositionWidth;
-        float height = datePositionHeight;
+     //   float width = datePositionWidth;
+     //   float height = datePositionHeight;
 
         TextPositionFinder.Position position = null;
 
@@ -69,11 +76,14 @@ public class DateStampServiceImpl implements DateStampService {
             position = new TextPositionFinder.Position();
         }
 
+        /*
         if (!position.isFound()){
             position.setPage(1);
             position.setX(width);
             position.setY(height);
         }
+
+         */
         return position;
     }
 }
