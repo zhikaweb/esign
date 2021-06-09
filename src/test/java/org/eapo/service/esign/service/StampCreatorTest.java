@@ -35,7 +35,7 @@ public class StampCreatorTest {
     private String rootPassword;
 
 
-    @Ignore
+  //  @Ignore
     @Test
     public void test() throws NoSuchAlgorithmException, CertificateException, NoSuchProviderException, KeyStoreException, IOException {
 

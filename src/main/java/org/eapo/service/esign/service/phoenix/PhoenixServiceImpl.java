@@ -1,5 +1,9 @@
 package org.eapo.service.esign.service.phoenix;
 
+import madras.database.SdoDatabaseBroker;
+import madras.model.SignedDocument;
+import madras.model.SignedFile;
+import org.apache.commons.io.IOUtils;
 import org.eapo.service.esign.exception.EsignException;
 import org.eapo.service.esign.service.SignerPdfService;
 import org.slf4j.Logger;
@@ -8,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +31,21 @@ public class PhoenixServiceImpl implements PhoenixService {
     @Autowired
     SignerPdfService signerPdfService;
 
+
+    private final String  selectDocInfoSql = " SELECT d.DOCKEY, p.PCKKEY, p.PCKPXI, d.DOCPAGES, d.DOCPCKOFFSET " +
+            " FROM tph014_document d, tph035_package p, tph013_docctl dct " +
+            " WHERE dct.dctkey=d.docdctkey and d.docpckkey=p.pckkey " +
+            " and p.PCKDOSKEY = (SELECT DOSKEY FROM tph019_dossier WHERE DOSORINUMBER = ?) " +
+            " and d.DOCFLAGDEL = 0 and p.PCKDATEFORMAL = ? and dct.DCTCODE = ? ";
+
+
+    @Autowired
+    MadrasDatabaseBroker madrasDatabaseBroker;// = new MadrasDatabaseBroker();
+
+    @Autowired
+    private SdoDatabaseBroker sdo;// = new SdoDatabaseBroker();
+
+    private SimpleDateFormat signedDocDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public void upload(String dossier, byte[] pdf, String doccode, Date date) throws Exception {
@@ -85,6 +106,53 @@ public class PhoenixServiceImpl implements PhoenixService {
         }
         upload(dossier, signed, doccode, date);
 
+
+        logger.info("getting docInfoList");
+        List<Object[]> docInfoList = madrasDatabaseBroker.getValuesList(selectDocInfoSql, new Object[]{dossier, date, doccode});
+
+        if (docInfoList.size()==0){
+            logger.error(" docInfoList - document not found");
+            return;
+        }
+        if (docInfoList.size()>1){
+            logger.error(" docInfoList - more than one document! ");
+            return;
+        }
+
+        String docKey = (String) docInfoList.get(0)[0];
+        logger.info("docKey: " + docKey);
+
+        try {
+            uploadPDF(docKey, doccode, date, dossier, pdf);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("Error at uploadPDF process..." + e.getMessage());
+            throw e;
+        }
     }
+
+    private void uploadPDF(String docKey, String madrasCode, Date docDate, String appNum, byte[] pdf) throws Exception {
+        // DMS
+        SignedDocument signedDoc = new SignedDocument();
+        signedDoc.setId(docKey);
+        signedDoc.setDocCode(madrasCode);
+        signedDoc.setDocDate(signedDocDateFormat.format(docDate));
+        signedDoc.setDocKey(docKey);
+        signedDoc.setDosNumber(appNum);
+        signedDoc.setSigningDate(new Date());
+        // TODO открывать транзакцию
+        madrasDatabaseBroker.insert(signedDoc);
+
+        // SDO
+        SignedFile signedFile = new SignedFile();
+        signedFile.setId(docKey);
+        signedFile.setOffset(0);
+        signedFile.setDataSize((long)pdf.length);
+        signedFile.setFileData(pdf);
+        sdo.insert(signedFile);
+        // TODO закрывать транзакцию
+
+    }
+
 
 }
