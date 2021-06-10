@@ -48,7 +48,7 @@ public class PhoenixServiceImpl implements PhoenixService {
     private SimpleDateFormat signedDocDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
-    public void upload(String dossier, byte[] pdf, String doccode, Date date) throws Exception {
+    public void upload(String dossier, byte[] pdf, String doccode, Date date, boolean doSavePDF) throws Exception {
 
         logger.info("uploading!");
 
@@ -58,10 +58,6 @@ public class PhoenixServiceImpl implements PhoenixService {
         String annotation = "";
 
         java.sql.Date sDate = date==null? new java.sql.Date(System.currentTimeMillis()):new java.sql.Date(date.getTime()) ;
-
-
-
-        // String docSource = "C:\\desc_amnd.pdf";
 
         File f = Files.createTempFile(dossier + "_" + System.currentTimeMillis(), ".pdf").toFile();
 
@@ -89,10 +85,41 @@ public class PhoenixServiceImpl implements PhoenixService {
 
         logger.info("file {} was uploaded!", f.getAbsolutePath());
 
+
+        if (doSavePDF) {
+            logger.info("getting docInfoList :dossier: {}  date: {}, doccode: {}", dossier, date, doccode);
+
+            MadrasDatabaseBroker mdb = new MadrasDatabaseBroker();
+
+            List<Object[]> docInfoList = mdb.getValuesList(selectDocInfoSql, new Object[]{dossier, date, doccode});
+
+
+            if (docInfoList.size() == 0) {
+                logger.error(" docInfoList - document not found");
+                return;
+            }
+            if (docInfoList.size() > 1) {
+                logger.error(" docInfoList - more than one document! ");
+                return;
+            }
+
+            String docKey = (String) docInfoList.get(0)[0];
+            logger.info("docKey: " + docKey);
+
+            try {
+                uploadPDF(docKey, doccode, date, dossier, pdf);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("Error at upload PDF process..." + e.getMessage());
+                throw e;
+            }
+        }
+
+
     }
 
     @Override
-    public void signAndUpload(String dossier, List<String> certHolders, byte[] pdf, String doccode, Date date) throws Exception {
+    public void signAndUpload(String dossier, List<String> certHolders, byte[] pdf, String doccode, Date date, boolean doSavePDF) throws Exception {
 
         byte[] signed;
 
@@ -104,31 +131,8 @@ public class PhoenixServiceImpl implements PhoenixService {
             logger.error("error sign process!");
             throw new EsignException("error sign process!", e);
         }
-        upload(dossier, signed, doccode, date);
+        upload(dossier, signed, doccode, date, doSavePDF);
 
-
-        logger.info("getting docInfoList");
-        List<Object[]> docInfoList = madrasDatabaseBroker.getValuesList(selectDocInfoSql, new Object[]{dossier, date, doccode});
-
-        if (docInfoList.size()==0){
-            logger.error(" docInfoList - document not found");
-            return;
-        }
-        if (docInfoList.size()>1){
-            logger.error(" docInfoList - more than one document! ");
-            return;
-        }
-
-        String docKey = (String) docInfoList.get(0)[0];
-        logger.info("docKey: " + docKey);
-
-        try {
-            uploadPDF(docKey, doccode, date, dossier, pdf);
-        }catch (Exception e){
-            e.printStackTrace();
-            logger.error("Error at uploadPDF process..." + e.getMessage());
-            throw e;
-        }
     }
 
     private void uploadPDF(String docKey, String madrasCode, Date docDate, String appNum, byte[] pdf) throws Exception {

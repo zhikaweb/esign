@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Service
+ @Service
 public class MadrasDatabaseBroker extends DatabaseBroker {
     public MadrasDatabaseBroker() {
         String cn = DatabaseBroker.class.getName();

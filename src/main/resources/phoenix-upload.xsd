@@ -8,6 +8,7 @@
                 <xs:element name="dosier" type="xs:string"/>
                 <xs:element name="doccode" type="xs:string"/>
                 <xs:element name="dtsend" type="xs:date" minOccurs="0"/>
+                <xs:element name="doSavePDF" type="xs:boolean" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

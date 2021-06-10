@@ -49,8 +49,10 @@ public class PhoenixController {
                                            @RequestParam("odcorresp") Integer odcorresp,
                                            @RequestParam(value = "dtsend", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date dtsend,
                                            @RequestParam(value = "doccode", defaultValue = "DOCRU") String doccode,
-                                           @RequestParam(value = "certHolders", required = false) String certHolders
-                                 ) throws Exception {
+                                           @RequestParam(value = "certHolders", required = false) String certHolders,
+                                           @RequestParam(value = "doSavePDF", defaultValue = "true") boolean doSavePDF
+
+                                        ) throws Exception {
 
 
         List<String> certHoldersList = null;
@@ -78,7 +80,7 @@ public class PhoenixController {
 
             Date date =  dtsend!=null?dtsend:new Date();
 
-            phoenixService.signAndUpload(dosier, certHoldersList, res, doccode, date);
+            phoenixService.signAndUpload(dosier, certHoldersList, res, doccode, date,doSavePDF);
 
         } catch (Exception e) {
             logger.error("Error on saving document with idappli {} and odcorresp {} to phoenix : {}", idappli, odcorresp, e.getMessage());
@@ -94,7 +96,8 @@ public class PhoenixController {
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
                                                @RequestParam("dosier") String dosier,
                                                @RequestParam(value = "doccode", defaultValue = "DOCRU") String doccode,
-                                               @RequestParam(value = "dtsend", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date dtsend
+                                               @RequestParam(value = "dtsend", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date dtsend,
+                                               @RequestParam(value = "doSavePDF", defaultValue = "true") boolean doSavePDF
                                        ) throws Exception {
 
         logger.info("Uploading document to dosier {} and doccode {}", dosier, doccode);
@@ -104,7 +107,7 @@ public class PhoenixController {
         try {
             byte[] document = file.getBytes();
             logger.info("Document size is {}", document.length);
-            phoenixService.upload(dosier, document, doccode, date);
+            phoenixService.upload(dosier, document, doccode, date, doSavePDF);
         } catch (Exception e) {
             logger.error("Error on uploading document to dosier {} and doccode {}", dosier, doccode);
             e.printStackTrace();

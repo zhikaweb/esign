@@ -31,11 +31,13 @@ public class UploadEndpoint {
         Upload2PhoenixResponse response = new Upload2PhoenixResponse();
 
 		Date dtsend = null;
+		boolean doSavePDF = true;
         if (request.getDtsend()!=null) {
 			dtsend = request.getDtsend().toGregorianCalendar().getTime();
+			doSavePDF = request.isDoSavePDF();
 		}
 		try {
-			phoenixService.upload(request.getDosier(), request.getFile(), request.getDoccode(), dtsend);
+			phoenixService.upload(request.getDosier(), request.getFile(), request.getDoccode(), dtsend, doSavePDF);
 			response.setIsSaved(true);
 			response.setMessage("OK");
 			logger.info("File was uploaded for dossier {}", request.getDosier());

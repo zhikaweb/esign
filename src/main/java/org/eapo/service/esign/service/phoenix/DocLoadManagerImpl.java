@@ -26,7 +26,7 @@ import java.util.zip.ZipOutputStream;
  * @author Dmitriy Merkushov
  */
 
-@Service
+// @Service
 public class DocLoadManagerImpl implements DocLoadManager {
   /*
     @Override
