@@ -43,7 +43,7 @@ public class UploadTest {
         Integer odcorresp = 11;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         List<String> certHolders = Collections.singletonList("astal");
-        sendRequest(idappli,odcorresp, "200800024", simpleDateFormat.format(new Date()), "EA001", certHolders);
+        sendRequest(idappli,odcorresp, "200800026", simpleDateFormat.format(new Date()), "EA001", certHolders);
     }
 
 

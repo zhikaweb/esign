@@ -63,7 +63,7 @@ public class EsignApplicationTests {
     }
 
 
-    @Ignore
+   // @Ignore
     @Test
     public void generateAllUsersCerts() throws Exception {
 

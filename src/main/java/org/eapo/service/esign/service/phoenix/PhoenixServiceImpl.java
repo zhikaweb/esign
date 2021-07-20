@@ -89,12 +89,11 @@ public class PhoenixServiceImpl implements PhoenixService {
         if (doSavePDF) {
             logger.info("getting docInfoList :dossier: {}  date: {}, doccode: {}", dossier, date, doccode);
 
-            MadrasDatabaseBroker mdb = new MadrasDatabaseBroker();
-
-            List<Object[]> docInfoList = mdb.getValuesList(selectDocInfoSql, new Object[]{dossier, date, doccode});
+            List<Object[]> docInfoList = readTiffDocInfo(dossier, date, doccode);
 
 
-            if (docInfoList.size() == 0) {
+
+            if (docInfoList == null) {
                 logger.error(" docInfoList - document not found");
                 return;
             }
@@ -116,6 +115,24 @@ public class PhoenixServiceImpl implements PhoenixService {
         }
 
 
+    }
+
+    // По необяснимой причине свежесохранный tiff не всегда виден сразу поэтому вставляем такой жуткий костыль
+
+    private List<Object[]> readTiffDocInfo(String dossier, Date date, String doccode) throws Exception {
+
+        for (int i = 1; i < 11; i++) {
+        MadrasDatabaseBroker mdb = new MadrasDatabaseBroker();
+        List<Object[]> docInfoList = mdb.getValuesList(selectDocInfoSql, new Object[]{dossier, date, doccode});
+        logger.info("getting docInfoList attempt {}", i);
+
+        if (docInfoList.size() > 0) {
+            return docInfoList;
+        }
+        Thread.sleep(300);
+    }
+
+        return null;
     }
 
     @Override
