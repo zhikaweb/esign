@@ -75,7 +75,7 @@ public class PhoenixController {
 
             byte[] res = document.getBody();
             if (dtsend!=null) {
-                res = dateStampService.doStamp(document.getBody(), simpleDateFormat.format(dtsend));
+                res = dateStampService.doStamp(document.getBody(), simpleDateFormat.format(dtsend), doccode);
             }
 
             Date date =  dtsend!=null?dtsend:new Date();

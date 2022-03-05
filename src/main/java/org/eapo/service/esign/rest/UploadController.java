@@ -36,6 +36,7 @@ public class UploadController {
     public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file,
                                                @RequestParam("idappli") String idappli,
                                                @RequestParam("odcorresp") Integer odcorresp,
+                                               @RequestParam("idletter") String idletter,
                                                @RequestParam("certHolders") String certHolders,
                                                @RequestParam(value = "fpage", defaultValue = "1") Integer fpage,
                                                @RequestParam(value = "lpage", defaultValue = "-1") Integer lpage,
@@ -44,7 +45,7 @@ public class UploadController {
 
         List<String> certHoldersList = Arrays.asList(certHolders.split(CERTHOLDERS_DELIMETR));
         logger.info("Uploading file idappli = {}, odcorresp = {}, file size = {}", idappli, odcorresp, file.getBytes().length);
-        Document document = uploadService.uploadFile(file, idappli, odcorresp, certHoldersList, saveToStore, fpage, lpage);
+        Document document = uploadService.uploadFile(file, idappli, odcorresp, certHoldersList, saveToStore, fpage, lpage, idletter);
         String fileName = document.getId() + RESPONSE_FILE_EXT;
         logger.debug("Sending response file {}", fileName);
         return getResponse(HTTPUtil.getHeaders(fileName), document.getBody());

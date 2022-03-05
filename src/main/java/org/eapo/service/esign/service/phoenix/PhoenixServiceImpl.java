@@ -36,7 +36,7 @@ public class PhoenixServiceImpl implements PhoenixService {
             " FROM tph014_document d, tph035_package p, tph013_docctl dct " +
             " WHERE dct.dctkey=d.docdctkey and d.docpckkey=p.pckkey " +
             " and p.PCKDOSKEY = (SELECT DOSKEY FROM tph019_dossier WHERE DOSORINUMBER = ?) " +
-            " and d.DOCFLAGDEL = 0 and p.PCKDATEFORMAL = ? and dct.DCTCODE = ? ";
+            " and d.DOCFLAGDEL = 0 and p.PCKDATEFORMAL = ? and dct.DCTCODE = ? order by d.DOCMOD desc limit 1";
 
 
     @Autowired

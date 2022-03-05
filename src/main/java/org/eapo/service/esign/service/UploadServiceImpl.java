@@ -1,6 +1,7 @@
 package org.eapo.service.esign.service;
 
 
+import com.lowagie.text.DocumentException;
 import org.eapo.service.esign.exception.EsignException;
 import org.eapo.service.esign.model.Document;
 import org.eapo.service.esign.service.converter.Converter2PdfService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,8 @@ public class UploadServiceImpl implements UploadService {
                                List<String> certHolders,
                                String saveToStore,
                                Integer fpage,
-                               Integer lpage) {
+                               Integer lpage,
+                               String idletter) {
 
         byte[] pdf;
 
@@ -55,16 +58,21 @@ public class UploadServiceImpl implements UploadService {
             throw new EsignException("error converting to pdf!", e);
         }
 
-        byte[] stamped;
+        Document document;
 
-        try {
-            stamped = stamperService.doStamp(pdf, certHolders, fpage, lpage);
-        } catch (Exception e) {
-            logger.error("error setting user stamp!");
-            throw new EsignException("error setting user stamp!", e);
+        if (!idletter.equals("PattE")) {
+            byte[] stamped;
+
+            try {
+                stamped = stamperService.doStamp(pdf, certHolders, fpage, lpage);
+            } catch (Exception e) {
+                logger.error("error setting user stamp!");
+                throw new EsignException("error setting user stamp!", e);
+            }
+            document = new Document(idappli, odcorresp, stamped);
+        } else {
+            document = new Document(idappli, odcorresp, pdf);
         }
-
-        Document document = new Document(idappli, odcorresp, stamped);
 
         if (Boolean.TRUE.toString().equalsIgnoreCase(saveToStore)) {
             logger.debug("Saving to document store...");

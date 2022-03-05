@@ -32,7 +32,7 @@ public class DateStampTest {
 
         byte[] pdf = Files.readAllBytes(file.toPath());
 
-        byte[] res = dateStampService.doStamp(pdf, "22.10.2020");
+        byte[] res = dateStampService.doStamp(pdf, "22.10.2020", "PattE");
 
         try (FileOutputStream fos = new FileOutputStream("C:\\esign\\res.pdf")) {
             fos.write(res);

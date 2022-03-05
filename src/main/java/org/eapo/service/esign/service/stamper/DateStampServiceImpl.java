@@ -35,14 +35,14 @@ public class DateStampServiceImpl implements DateStampService {
     String dateStampPattern;
 
     @Override
-    public byte[] doStamp(byte[] pdf, String date) {
+    public byte[] doStamp(byte[] pdf, String date, String doccode) {
 
         byte[] stamp = dateStampCreator.build(date);
 
         TextPositionFinder.Position position = getPosition(pdf);
 
-        // если нашли паттерн - ставим штампик с датой
-        if (position.isFound()) {
+        // если нашли паттерн - ставим штампик с датой и если doccode не из списка исключений
+        if (position.isFound() && !doccode.equals("PattE")) {
             logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
             return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
         }

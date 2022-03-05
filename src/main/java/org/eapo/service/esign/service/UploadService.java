@@ -13,7 +13,8 @@ public interface UploadService {
                         List<String> certHolder,
                         String saveToStore,
                         Integer fpage,
-                        Integer lpage);
+                        Integer lpage,
+                        String idletter);
 
     Document downloadFile(String idappli, Integer odcorresp) throws Exception;
 
