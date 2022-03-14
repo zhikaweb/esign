@@ -54,7 +54,7 @@ public class UserStampCreatorImpl implements UserStampCreator {
         gO.drawString(certificate.getSerialNumber().toString(),
                 (int) (img.getWidth() / 2.7),
                 (int) (img.getHeight() / 1.6));
-        gO.drawString(certificate.getIssuerX500Principal().getName(),
+        gO.drawString(certificate.getSubjectX500Principal().getName(),
                 (int) (img.getWidth() / 2.7), (int) (img.getHeight() / 1.3));
 
 

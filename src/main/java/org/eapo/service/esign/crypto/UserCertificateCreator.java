@@ -90,8 +90,8 @@ public class UserCertificateCreator {
         ContentSigner signer = csBuilder.build(keyPair.getPrivate());
         PKCS10CertificationRequest csr = p10Builder.build(signer);
 
-
-        X500Name x500Name = new X500Name("CN=" + user);
+//        X500Name x500Name = new X500Name("CN=" + user);
+        X500Name x500Name = new X500Name(rootx509Cert.getIssuerX500Principal().toString());
 
         final Instant now = Instant.now();
         final Date notBefore = Date.from(now);
@@ -112,7 +112,7 @@ public class UserCertificateCreator {
         issuedCertBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(false));
         issuedCertBuilder.addExtension(Extension.authorityKeyIdentifier, false, issuedCertExtUtils.createAuthorityKeyIdentifier(rootx509Cert));
         issuedCertBuilder.addExtension(Extension.subjectKeyIdentifier, false, issuedCertExtUtils.createSubjectKeyIdentifier(csr.getSubjectPublicKeyInfo()));
-        issuedCertBuilder.addExtension(Extension.keyUsage, false, new KeyUsage(KeyUsage.keyEncipherment));
+//        issuedCertBuilder.addExtension(Extension.keyUsage, false, new KeyUsage(KeyUsage.keyEncipherment));
 
 
         JcaContentSignerBuilder csrBuilder = new JcaContentSignerBuilder(hashAlgorithm).setProvider(cryptoprovider);

@@ -42,9 +42,14 @@ public class DateStampServiceImpl implements DateStampService {
         TextPositionFinder.Position position = getPosition(pdf);
 
         // если нашли паттерн - ставим штампик с датой и если doccode не из списка исключений
-        if (position.isFound() && !doccode.equals("PattE")) {
-            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
-            return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
+        if (position.isFound()) {
+            if (!doccode.equals("PattE")) {
+                logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
+                return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
+            } else {
+                logger.info("Doccode key is not exist");
+                return pdf;
+            }
         }
         // если не нашли -  не ставим никакой штамп
         else {

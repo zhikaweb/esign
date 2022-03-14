@@ -231,3 +231,16 @@ AKuttybayeva	Куттыбаева А.
 bkazakbaev	Казакбаев Б.
 akemel	Кемел кызы А.
 vbrenner	Бреннер В.Б.
+MPodolskaya	Подольская М.Е.
+szhikina	Жикина С.В.
+MSolomatina	Соломатина М.С.
+MDoronina	Доронина М.А. (--)
+epadalko	Падалко Е.В.
+aabenova	Абенова А.
+vsadovsky	Садовский В.Л.
+ekostrikina	Кострикина Е.И.
+gkaparova	Капарова Г.
+iantufeeva	Антюфеева И.В.
+AAbdimutalip	Абдимуталип А.
+ivliev	Ивлиев Г.П.
+aazizyan	Азизян А.Ф.
