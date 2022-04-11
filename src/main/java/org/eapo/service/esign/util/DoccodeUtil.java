@@ -1,6 +1,5 @@
 package org.eapo.service.esign.util;
 
-import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,11 +7,12 @@ public class DoccodeUtil {
 
 	static Set<String> doccodes = new HashSet<>();
 
-	public DoccodeUtil(Set<String> doccodes) {
+	public DoccodeUtil() {
+		doccodes.add("PATTE");
 		doccodes.add("PattE");
 	}
 
-	public static boolean isDoccodeExists(String idletter) {
-		return doccodes.stream().anyMatch(s1 -> s1.equals(idletter));
+	public boolean isDoccodeExists(String doccode) {
+		return doccodes.stream().anyMatch(s1 -> s1.equals(doccode));
 	}
 }

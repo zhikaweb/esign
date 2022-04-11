@@ -60,8 +60,9 @@ public class UploadServiceImpl implements UploadService {
         }
 
         Document document;
+        DoccodeUtil doccodeUtil = new DoccodeUtil();
 
-        if (!DoccodeUtil.isDoccodeExists(idletter)) {
+        if (!doccodeUtil.isDoccodeExists(idletter)) {
             byte[] stamped;
 
             try {
