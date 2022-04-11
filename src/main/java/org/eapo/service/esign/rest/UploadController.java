@@ -36,7 +36,7 @@ public class UploadController {
     public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file,
                                                @RequestParam("idappli") String idappli,
                                                @RequestParam("odcorresp") Integer odcorresp,
-                                               @RequestParam("idletter") String idletter,
+                                               @RequestParam(value = "idletter", defaultValue = "EA000") String idletter,
                                                @RequestParam("certHolders") String certHolders,
                                                @RequestParam(value = "fpage", defaultValue = "1") Integer fpage,
                                                @RequestParam(value = "lpage", defaultValue = "-1") Integer lpage,

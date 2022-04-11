@@ -7,6 +7,7 @@ import org.eapo.service.esign.model.Document;
 import org.eapo.service.esign.service.converter.Converter2PdfService;
 import org.eapo.service.esign.service.stamper.StamperService;
 import org.eapo.service.esign.service.store.DocumentService;
+import org.eapo.service.esign.util.DoccodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class UploadServiceImpl implements UploadService {
 
         Document document;
 
-        if (!idletter.equals("PattE")) {
+        if (!DoccodeUtil.isDoccodeExists(idletter)) {
             byte[] stamped;
 
             try {
