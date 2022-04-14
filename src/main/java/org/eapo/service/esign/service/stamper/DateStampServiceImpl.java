@@ -36,23 +36,16 @@ public class DateStampServiceImpl implements DateStampService {
     String dateStampPattern;
 
     @Override
-    public byte[] doStamp(byte[] pdf, String date, String doccode) {
+    public byte[] doStamp(byte[] pdf, String date) {
 
         byte[] stamp = dateStampCreator.build(date);
 
         TextPositionFinder.Position position = getPosition(pdf);
 
-        DoccodeUtil doccodeUtil = new DoccodeUtil();
-
-        // если нашли паттерн - ставим штампик с датой и если doccode не из списка исключений
+        // если нашли паттерн - ставим штампик с датой
         if (position.isFound()) {
-            if (!doccodeUtil.isDoccodeExists(doccode)) {
-                logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
-                return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
-            } else {
-                logger.info("Doccode key excluded");
-                return pdf;
-            }
+            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
+            return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
         }
         // если не нашли -  не ставим никакой штамп
         else {

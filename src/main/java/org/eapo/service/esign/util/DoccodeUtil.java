@@ -5,14 +5,14 @@ import java.util.Set;
 
 public class DoccodeUtil {
 
-	static Set<String> doccodes = new HashSet<>();
+	private Set<String> doccodes = new HashSet<>();
 
 	public DoccodeUtil() {
-		doccodes.add("PATTE");
-		doccodes.add("PattE");
+		this.doccodes.add("PattE");
+		this.doccodes.add("PattI");
 	}
 
 	public boolean isDoccodeExists(String doccode) {
-		return doccodes.stream().anyMatch(s1 -> s1.equals(doccode));
+		return this.doccodes.stream().anyMatch(s1 -> s1.equals(doccode));
 	}
 }

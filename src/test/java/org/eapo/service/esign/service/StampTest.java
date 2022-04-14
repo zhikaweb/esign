@@ -45,10 +45,10 @@ public class StampTest {
         byte[] pdf = Files.readAllBytes(file.toPath());
 
         List<String> certHolders = new ArrayList<>();
-        certHolders.add("astal");
+        certHolders.add("akondrat");
      //   certHolders.add("vputin");
 
-        byte[] res = stamperService.doStamp(pdf, certHolders,1,1);
+        byte[] res = stamperService.doStamp(pdf, certHolders,1,1, "Patt");
 
 
         res =  signerPdfService.sign(res, certHolders);
