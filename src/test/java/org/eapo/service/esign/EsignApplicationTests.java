@@ -21,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Objects;
 
 // @Ignore
 @RunWith(SpringRunner.class)
@@ -84,5 +85,12 @@ public class EsignApplicationTests {
         });
     }
 
+    @Test
+    public void getCodeFromFile() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource("excludeDoccodes.txt")).getFile());
+        boolean a = Files.readAllLines(file.toPath()).stream().anyMatch(s1 -> s1.equals("Patt"));
+        System.out.println(a);
+    }
 
 }
