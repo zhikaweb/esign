@@ -10,6 +10,9 @@ public class DoccodeUtil {
 	public DoccodeUtil() {
 		this.doccodes.add("PattE");
 		this.doccodes.add("PattI");
+		this.doccodes.add("400CE");
+		this.doccodes.add("400RE");
+		this.doccodes.add("R96E");
 	}
 
 	public boolean isDoccodeExists(String doccode) {
