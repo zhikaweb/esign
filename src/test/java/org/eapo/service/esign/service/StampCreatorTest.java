@@ -41,7 +41,7 @@ public class StampCreatorTest {
 
         EsignApplication.addBouncyCastleAsSecurityProvider();
 
-        X509Certificate certificate = (X509Certificate) keyStoreHelper.load("astal").getCertificate("astal");
+        X509Certificate certificate = (X509Certificate) keyStoreHelper.load("akondrat").getCertificate("akondrat");
 
         byte[] bytes = userStampCreator.build(certificate);
 

@@ -7,6 +7,7 @@ import org.eapo.service.esign.model.Document;
 import org.eapo.service.esign.service.converter.Converter2PdfService;
 import org.eapo.service.esign.service.stamper.StamperService;
 import org.eapo.service.esign.service.store.DocumentService;
+import org.eapo.service.esign.util.DoccodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,21 +59,16 @@ public class UploadServiceImpl implements UploadService {
             throw new EsignException("error converting to pdf!", e);
         }
 
-        Document document;
+        byte[] stamped;
 
-        if (!idletter.equals("PattE")) {
-            byte[] stamped;
-
-            try {
-                stamped = stamperService.doStamp(pdf, certHolders, fpage, lpage);
-            } catch (Exception e) {
-                logger.error("error setting user stamp!");
-                throw new EsignException("error setting user stamp!", e);
-            }
-            document = new Document(idappli, odcorresp, stamped);
-        } else {
-            document = new Document(idappli, odcorresp, pdf);
+        try {
+            stamped = stamperService.doStamp(pdf, certHolders, fpage, lpage, idletter);
+        } catch (Exception e) {
+            logger.error("error setting user stamp!");
+            throw new EsignException("error setting user stamp!", e);
         }
+
+        Document document = new Document(idappli, odcorresp, stamped);
 
         if (Boolean.TRUE.toString().equalsIgnoreCase(saveToStore)) {
             logger.debug("Saving to document store...");

@@ -4,6 +4,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfReader;
 import org.eapo.service.esign.crypto.KeyStoreHelper;
 import org.eapo.service.esign.exception.EsignException;
+import org.eapo.service.esign.util.DoccodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,18 +50,18 @@ public class StamperServiceImpl implements StamperService {
     TextPositionFinder textPositionFinder;
 
     @Override
-    public byte[] doStamp(byte[] pdf, List<String> certHolders, Integer fPage, Integer lPage) throws IOException, DocumentException {
+    public byte[] doStamp(byte[] pdf, List<String> certHolders, Integer fPage, Integer lPage, String idletter) throws IOException, DocumentException {
 
         int i = 1;
         for (String certHolder: certHolders) {
-            pdf = doStamp(pdf, certHolder, i, fPage, lPage, certHolders.size()>1);
+            pdf = doStamp(pdf, certHolder, i, fPage, lPage, certHolders.size()>1, idletter);
             i++;
         }
         return pdf;
     }
 
 
-    private byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fPage, Integer lPage, boolean multiSign) throws IOException, DocumentException {
+    private byte[] doStamp(byte[] pdf, String certHolder, int pos, Integer fPage, Integer lPage, boolean multiSign, String idletter) throws IOException, DocumentException {
         logger.debug("Making stamp for user {}", certHolder);
 
         X509Certificate cert = null;
@@ -120,13 +122,21 @@ public class StamperServiceImpl implements StamperService {
 
             final int finalLastPage = lastPage;
 
+        DoccodeUtil doccodeUtil = new DoccodeUtil();
+
+        List<TextPositionFinder.Position> stampPositions;
+
+        if (!doccodeUtil.isDoccodeExists(idletter)) {
             // отбираем страницы которые попадают в диапазон для штампиков
-            List<TextPositionFinder.Position> stampPositions = positions.stream()
+            stampPositions = positions.stream()
                     .filter(p->((p.getPage()>=fPage) && (p.getPage()<=finalLastPage)))
                     // для документов, подписываемых НЕСКОЛЬКИМИ людьми, подписи ставятся ТОЛЬКО в явно указанные места
                     // то есть если не задано положение то подпись не ставится (фильтруем)
                     .filter(p->(!multiSign || p.isFound()))
                     .collect(Collectors.toList());
+        } else {
+            stampPositions = new ArrayList<>();
+        }
 
             // ставим штампики в нужные позиции
         return stamperHelper.doStamp(pdf, stamp, stampPositions);

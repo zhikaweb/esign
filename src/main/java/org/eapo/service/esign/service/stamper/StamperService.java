@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface StamperService {
 
-    byte[] doStamp(byte[] pdf, List<String> certHolder, Integer fpage, Integer lpage) throws IOException, DocumentException;
+    byte[] doStamp(byte[] pdf, List<String> certHolder, Integer fpage, Integer lpage, String idletter) throws IOException, DocumentException;
 
 }

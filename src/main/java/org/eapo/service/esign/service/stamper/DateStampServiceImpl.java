@@ -1,5 +1,6 @@
 package org.eapo.service.esign.service.stamper;
 
+import org.eapo.service.esign.util.DoccodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,21 +36,16 @@ public class DateStampServiceImpl implements DateStampService {
     String dateStampPattern;
 
     @Override
-    public byte[] doStamp(byte[] pdf, String date, String doccode) {
+    public byte[] doStamp(byte[] pdf, String date) {
 
         byte[] stamp = dateStampCreator.build(date);
 
         TextPositionFinder.Position position = getPosition(pdf);
 
-        // если нашли паттерн - ставим штампик с датой и если doccode не из списка исключений
+        // если нашли паттерн - ставим штампик с датой
         if (position.isFound()) {
-            if (!doccode.equals("PattE")) {
-                logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
-                return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
-            } else {
-                logger.info("Doccode key is not exist");
-                return pdf;
-            }
+            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
+            return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
         }
         // если не нашли -  не ставим никакой штамп
         else {
