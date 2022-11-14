@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.eapo.service</groupId>
 	<artifactId>esign</artifactId>
-	<version>0.1.6</version>
+	<version>0.1.7</version>
 	<name>esign</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -241,6 +241,11 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 	</dependencies>
