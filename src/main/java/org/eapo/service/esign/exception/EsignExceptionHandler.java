@@ -34,6 +34,7 @@ public class EsignExceptionHandler extends ResponseEntityExceptionHandler {
         HttpHeaders headers = new HttpHeaders(HTTPUtil.getCommonHeaders());
         headers.setAccessControlAllowOrigin("*");
         headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.add("msg-header", ex.getMessage());
         return new ResponseEntity<>(error, headers, HttpStatus.BAD_REQUEST);
     }
 
