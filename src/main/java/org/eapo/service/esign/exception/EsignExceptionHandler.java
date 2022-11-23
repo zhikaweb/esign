@@ -21,6 +21,9 @@ public class EsignExceptionHandler extends ResponseEntityExceptionHandler {
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
+//    The following line is used with UploadControllerTest
+//    private String maxFileSize="10MB";
+
     @ExceptionHandler(value
             = {EsignException.class})
     public ResponseEntity<Object> scannerException(Exception ex, WebRequest request) {
