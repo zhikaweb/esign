@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -24,15 +23,15 @@ public class EsignExceptionHandler extends ResponseEntityExceptionHandler {
 //    The following line is used with UploadControllerTest
 //    private String maxFileSize="10MB";
 
-    @ExceptionHandler(value
-            = {EsignException.class})
-    public ResponseEntity<Object> scannerException(Exception ex, WebRequest request) {
-        log.error(ex.getMessage());
-        log.info("Inside first handler");
-        String bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse,
-                HTTPUtil.getCommonHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-    }
+//    @ExceptionHandler(value
+//            = {EsignException.class})
+//    public ResponseEntity<Object> scannerException(Exception ex, WebRequest request) {
+//        log.error(ex.getMessage());
+//        log.info("Inside first handler");
+//        String bodyOfResponse = ex.getMessage();
+//        return handleExceptionInternal(ex, bodyOfResponse,
+//                HTTPUtil.getCommonHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+//    }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public @ResponseBody ResponseEntity<?> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
