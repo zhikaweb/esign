@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,12 +41,13 @@ public class DateStampServiceImpl implements DateStampService {
 
         byte[] stamp = dateStampCreator.build(date);
 
-        TextPositionFinder.Position position = getPosition(pdf);
+        List<TextPositionFinder.Position> positions = getPositions(pdf);
 
         // если нашли паттерн - ставим штампик с датой
-        if (position.isFound()) {
-            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
-            return stamperHelper.doStamp(pdf, stamp, Collections.singletonList(position));
+        if (!positions.isEmpty()) {
+//            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, position.getX(), position.getY(), position.getPage() );
+            logger.info("DatePattern {} found x={} y={} page={}", dateStampPattern, positions.get(0).getX(), positions.get(0).getY(), positions.get(0).getPage() );
+            return stamperHelper.doStamp(pdf, stamp, positions);
         }
         // если не нашли -  не ставим никакой штамп
         else {
@@ -61,20 +63,20 @@ public class DateStampServiceImpl implements DateStampService {
      * @return
      */
 
-    private TextPositionFinder.Position getPosition(byte[] pdf) {
+    private List<TextPositionFinder.Position> getPositions(byte[] pdf) {
 
      //   float width = datePositionWidth;
      //   float height = datePositionHeight;
 
-        TextPositionFinder.Position position = null;
+        List<TextPositionFinder.Position> positions = null;
 
         try {
-            List<TextPositionFinder.Position> positions = textPositionFinder.position(pdf,dateStampPattern);
-             position = positions.get(0);
+            positions = textPositionFinder.position(pdf,dateStampPattern);
+//             position = positions.get(0);
 
         } catch (IOException e) {
             e.printStackTrace();
-            position = new TextPositionFinder.Position();
+            positions = new ArrayList<>();
         }
 
         /*
@@ -85,6 +87,6 @@ public class DateStampServiceImpl implements DateStampService {
         }
 
          */
-        return position;
+        return positions;
     }
 }
